@@ -1,5 +1,2 @@
 @import "tailwindcss";
-@import "tailwindcss/typography";
-
-body {
-}
+@plugin "@tailwindcss/typography";

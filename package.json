@@ -10,17 +10,21 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "react": "^19.1.0",
+    "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "next": "15.3.5",
-    "rehype-raw": "^7.0.0"
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
-    "postcss": "^8",
-    "tailwindcss": "^4.1.11",
+    "@tauri-apps/cli": "^2.6.2",
+    "tailwindcss": "^4",
     "eslint": "^9",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "15.3.5",
     "@eslint/eslintrc": "^3"
   }
 }
