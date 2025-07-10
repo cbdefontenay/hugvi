@@ -5,6 +5,7 @@
     "npm:@tailwindcss/postcss@4": "4.1.11",
     "npm:@tailwindcss/typography@~0.5.16": "0.5.16_tailwindcss@4.1.11",
     "npm:@tauri-apps/cli@^2.6.2": "2.6.2",
+    "npm:@tauri-apps/plugin-sql@2.3": "2.3.0",
     "npm:eslint-config-next@15.3.5": "15.3.5_eslint@9.30.1_@typescript-eslint+parser@8.36.0__eslint@9.30.1__typescript@5.8.3_eslint-plugin-import@2.32.0__eslint@9.30.1",
     "npm:eslint@9": "9.30.1",
     "npm:next@15.3.5": "15.3.5_react@19.1.0_react-dom@19.1.0__react@19.1.0",
@@ -502,6 +503,9 @@
         "tailwindcss"
       ]
     },
+    "@tauri-apps/api@2.6.0": {
+      "integrity": "sha512-hRNcdercfgpzgFrMXWwNDBN0B7vNzOzRepy6ZAmhxi5mDLVPNrTpo9MGg2tN/F7JRugj4d2aF7E1rtPXAHaetg=="
+    },
     "@tauri-apps/cli-darwin-arm64@2.6.2": {
       "integrity": "sha512-YlvT+Yb7u2HplyN2Cf/nBplCQARC/I4uedlYHlgtxg6rV7xbo9BvG1jLOo29IFhqA2rOp5w1LtgvVGwsOf2kxw==",
       "os": ["darwin"],
@@ -573,6 +577,12 @@
         "@tauri-apps/cli-win32-x64-msvc"
       ],
       "bin": true
+    },
+    "@tauri-apps/plugin-sql@2.3.0": {
+      "integrity": "sha512-JYwIocfsLaDWa41LMiZWuzts7yCJR+EpZPRmgpO7Gd7XiAS9S67dKz306j/k/d9XntB0YopMRBol2OIWMschuA==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
     },
     "@tybys/wasm-util@0.9.0": {
       "integrity": "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==",
@@ -3677,6 +3687,7 @@
         "npm:@tailwindcss/postcss@4",
         "npm:@tailwindcss/typography@~0.5.16",
         "npm:@tauri-apps/cli@^2.6.2",
+        "npm:@tauri-apps/plugin-sql@2.3",
         "npm:eslint-config-next@15.3.5",
         "npm:eslint@9",
         "npm:next@15.3.5",

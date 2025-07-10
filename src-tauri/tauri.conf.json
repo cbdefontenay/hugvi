@@ -9,6 +9,11 @@
     "devUrl": "http://localhost:3000",
     "frontendDist": "../out"
   },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:folders.db"]
+    }
+  },
   "app": {
     "windows": [
       {

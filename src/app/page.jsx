@@ -1,9 +1,9 @@
-import EditorComponent from "@/components/EditorComponent";
+import SidePanelComponent from "@/components/SidePanelComponent";
 
 export default function Home() {
     return (
-        <div>
-            <EditorComponent/>
-        </div>
+        <>
+            <SidePanelComponent/>
+        </>
     );
 }
