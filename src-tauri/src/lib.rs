@@ -1,21 +1,14 @@
+mod db;
+
 use tauri_plugin_sql::{Builder, Migration, MigrationKind};
+use crate::db::sqlite_migrations;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let migrations = vec![
-        Migration {
-            version: 1,
-            description: "create_folders_table",
-            sql: "CREATE TABLE IF NOT EXISTS folders (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);",
-            kind: MigrationKind::Up,
-        },
-    ];
-
     tauri::Builder::default()
-        .plugin(tauri_plugin_sql::Builder::new().build())
         .plugin(
             Builder::default()
-                .add_migrations("sqlite:folders.db", migrations)
+                .add_migrations("sqlite:app.db", sqlite_migrations())
                 .build(),
         )
         .run(tauri::generate_context!())
