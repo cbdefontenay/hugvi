@@ -5,6 +5,7 @@
     "npm:@tailwindcss/postcss@4": "4.1.11",
     "npm:@tailwindcss/typography@~0.5.16": "0.5.16_tailwindcss@4.1.11",
     "npm:@tauri-apps/cli@^2.6.2": "2.6.2",
+    "npm:@tauri-apps/plugin-dialog@2.3": "2.3.0",
     "npm:@tauri-apps/plugin-sql@2.3": "2.3.0",
     "npm:eslint-config-next@15.3.5": "15.3.5_eslint@9.30.1_@typescript-eslint+parser@8.36.0__eslint@9.30.1__typescript@5.8.3_eslint-plugin-import@2.32.0__eslint@9.30.1",
     "npm:eslint@9": "9.30.1",
@@ -577,6 +578,12 @@
         "@tauri-apps/cli-win32-x64-msvc"
       ],
       "bin": true
+    },
+    "@tauri-apps/plugin-dialog@2.3.0": {
+      "integrity": "sha512-ylSBvYYShpGlKKh732ZuaHyJ5Ie1JR71QCXewCtsRLqGdc8Is4xWdz6t43rzXyvkItM9syNPMvFVcvjgEy+/GA==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
     },
     "@tauri-apps/plugin-sql@2.3.0": {
       "integrity": "sha512-JYwIocfsLaDWa41LMiZWuzts7yCJR+EpZPRmgpO7Gd7XiAS9S67dKz306j/k/d9XntB0YopMRBol2OIWMschuA==",
@@ -3686,7 +3693,9 @@
         "npm:@eslint/eslintrc@3",
         "npm:@tailwindcss/postcss@4",
         "npm:@tailwindcss/typography@~0.5.16",
+        "npm:@tauri-apps/api@^2.6.0",
         "npm:@tauri-apps/cli@^2.6.2",
+        "npm:@tauri-apps/plugin-dialog@2.3",
         "npm:@tauri-apps/plugin-sql@2.3",
         "npm:eslint-config-next@15.3.5",
         "npm:eslint@9",

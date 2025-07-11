@@ -8,6 +8,8 @@ import {
     loadFoldersAndNotes
 } from "@/helpers/DbHelpers";
 import EditorComponent from "@/components/EditorComponent";
+import {invoke} from '@tauri-apps/api/core';
+import {confirm} from '@tauri-apps/plugin-dialog';
 
 export default function SidePanelComponent() {
     const [folders, setFolders] = useState([]);
@@ -60,7 +62,12 @@ export default function SidePanelComponent() {
 
     const handleDeleteFolder = async (folderId) => {
         const folder = folders.find(f => f.id === folderId);
-        if (confirm(`Are you sure you want to delete "${folder.name}" and all its notes?`)) {
+        const confirmation = await confirm(
+            'Are you sure you want to delete the folder?',
+            { title: 'Delete folder', kind: 'warning' }
+        );
+
+        if (confirmation) {
             try {
                 await db.execute("DELETE FROM folders WHERE id = $1", [folderId]);
                 setFolders(folders.filter(f => f.id !== folderId));
