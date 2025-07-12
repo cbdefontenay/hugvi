@@ -53,7 +53,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                 <header
                     className="flex justify-between items-center mb-8 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-2xl py-2 px-6 w-full">
                     <h1 className="text-2xl font-bold font-serif">
-                        {activeNote.content.split('\n')[0].replace('#', '').trim() || "Untitled Note"}
+                        {activeNote.title || "Untitled Note"}
                     </h1>
                     <div className="flex gap-2">
                         <button

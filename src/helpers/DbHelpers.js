@@ -1,4 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
+import {confirm} from "@tauri-apps/plugin-dialog";
 
 export const handleAddFolderAsync = async (folderName, setFolderName, setIsModalOpen, folders, setFolders, setError, db) => {
     const name = folderName.trim();
@@ -45,19 +46,17 @@ export const handleCreateNoteAsync = async (noteName, folderId, setNoteName, set
     }
 
     try {
-        const newNote = {
-            content: `# ${noteName}\n\nStart writing here...`,
-            folder_id: folderId
-        };
+        const title = noteName.trim();
+        const content = `# ${title}\n\nStart writing here...`;
 
         await db.execute(
-            "INSERT INTO note (content, date_created, folder_id) VALUES ($1, datetime('now'), $2)",
-            [newNote.content, folderId]
+            "INSERT INTO note (title, content, date_created, folder_id) VALUES ($1, $2, datetime('now'), $3)",
+            [title, content, folderId]
         );
 
         // Get the inserted note with its ID
         const insertedNote = await db.select(
-            "SELECT id, content FROM note WHERE folder_id = $1 ORDER BY id DESC LIMIT 1",
+            "SELECT id, title, content FROM note WHERE folder_id = $1 ORDER BY id DESC LIMIT 1",
             [folderId]
         );
 
@@ -95,7 +94,7 @@ export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
             const notesMap = {};
             for (const folder of folderResult) {
                 const noteResult = await db.select(
-                    "SELECT id, content FROM note WHERE folder_id = $1",
+                    "SELECT id, title, content FROM note WHERE folder_id = $1",
                     [folder.id]
                 );
                 notesMap[folder.id] = noteResult || [];
@@ -110,5 +109,68 @@ export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
     } catch (e) {
         console.error("Failed to initialize database:", e);
         return null;
+    }
+};
+
+export const handleSaveNoteAsync = async (db, noteId, newContent, setNotes) => {
+    try {
+        await db.execute(
+            "UPDATE note SET content = $1 WHERE id = $2",
+            [newContent, noteId]
+        );
+
+        setNotes(prev => {
+            const updatedNotes = {...prev};
+            for (const folderId in updatedNotes) {
+                updatedNotes[folderId] = updatedNotes[folderId].map(note =>
+                    note.id === noteId ? {...note, content: newContent} : note
+                );
+            }
+            return updatedNotes;
+        });
+    } catch (e) {
+        console.error("Failed to update note:", e);
+        throw new Error("Failed to save note");
+    }
+};
+
+export const handleDeleteFolderAsync = async (
+    folderId,
+    setFolders,
+    notes,
+    folders,
+    confirmation,
+    db,
+    setMenuOpen,
+    setNotes,
+    activeNote,
+    setActiveNote
+) => {
+    if (!confirmation) return;
+
+    try {
+        // Delete all notes in the folder first
+        await db.execute("DELETE FROM note WHERE folder_id = $1", [folderId]);
+
+        // Then delete the folder
+        await db.execute("DELETE FROM folders WHERE id = $1", [folderId]);
+
+        // Update state
+        setFolders(folders.filter(f => f.id !== folderId));
+
+        // Remove notes from state
+        const newNotes = {...notes};
+        delete newNotes[folderId];
+        setNotes(newNotes);
+
+        // Clear active note if it was in this folder
+        if (activeNote && newNotes[folderId]?.some(note => note.id === activeNote.id)) {
+            setActiveNote(null);
+        }
+
+        setMenuOpen(null);
+    } catch (e) {
+        console.error("Failed to delete folder:", e);
+        throw new Error("Failed to delete folder");
     }
 };

@@ -4,6 +4,7 @@
     "npm:@eslint/eslintrc@3": "3.3.1",
     "npm:@tailwindcss/postcss@4": "4.1.11",
     "npm:@tailwindcss/typography@~0.5.16": "0.5.16_tailwindcss@4.1.11",
+    "npm:@tauri-apps/api@^2.6.0": "2.6.0",
     "npm:@tauri-apps/cli@^2.6.2": "2.6.2",
     "npm:@tauri-apps/plugin-dialog@2.3": "2.3.0",
     "npm:@tauri-apps/plugin-sql@2.3": "2.3.0",

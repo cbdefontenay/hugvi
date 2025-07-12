@@ -1,7 +1,7 @@
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 pub fn sqlite_migrations() -> Vec<Migration> {
-    let migrations = vec![
+    vec![
         Migration {
             version: 1,
             description: "create_folders_table",
@@ -30,7 +30,17 @@ pub fn sqlite_migrations() -> Vec<Migration> {
             "#,
             kind: MigrationKind::Up,
         },
-    ];
-
-    migrations
+        Migration {
+            version: 3,
+            description: "add_title_to_note_table",
+            sql: r#"
+                ALTER TABLE note ADD COLUMN title TEXT NOT NULL DEFAULT 'Untitled Note';
+                UPDATE note SET title = substr(content, 1, instr(content, char(10)) - 1);
+                UPDATE note SET title = replace(title, '#', '') WHERE title LIKE '#%';
+                UPDATE note SET title = trim(title);
+                UPDATE note SET title = 'Untitled Note' WHERE title IS NULL OR title = '';
+            "#,
+            kind: MigrationKind::Up,
+        },
+    ]
 }
