@@ -28,7 +28,26 @@ export default function SidePanelComponent() {
     const [currentFolderId, setCurrentFolderId] = useState(null);
     const [activeNote, setActiveNote] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [folderToDelete, setFolderToDelete] = useState(null);
     const menuRefs = useRef({});
+
+    // When clicking outside the popup
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                (isFolderModalOpen || isNoteModalOpen || showDeleteConfirm) &&
+                !e.target.closest('.modal-content')
+            ) {
+                setIsFolderModalOpen(false);
+                setIsNoteModalOpen(false);
+                setShowDeleteConfirm(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isFolderModalOpen, isNoteModalOpen, showDeleteConfirm]);
 
     useEffect(() => {
         loadFoldersAndNotes(setFolders, setNotes, setDb).then(r => console.log(r));
@@ -55,17 +74,33 @@ export default function SidePanelComponent() {
     };
 
     const handleDeleteFolder = async (folderId) => {
-        const confirmation = await confirm('Are you sure you want to delete the folder?', {
-            title: 'Delete folder',
-            kind: 'warning'
-        });
+        setFolderToDelete(folderId);
+        setShowDeleteConfirm(true);
+        setMenuOpen(null); // Close the menu when showing confirmation
+    };
 
-        try {
-            await handleDeleteFolderAsync(folderId, setFolders, notes, folders, confirmation, db, setMenuOpen, setNotes, activeNote, setActiveNote);
-        } catch (e) {
-            console.error("Failed to delete folder:", e);
-            alert("Failed to delete folder");
+    const confirmDelete = async (confirmed) => {
+        setShowDeleteConfirm(false);
+        if (confirmed) {
+            try {
+                await handleDeleteFolderAsync(
+                    folderToDelete,
+                    setFolders,
+                    notes,
+                    folders,
+                    true,
+                    db,
+                    setMenuOpen,
+                    setNotes,
+                    activeNote,
+                    setActiveNote
+                );
+            } catch (e) {
+                console.error("Failed to delete folder:", e);
+                alert("Failed to delete folder");
+            }
         }
+        setFolderToDelete(null);
     };
 
     const toggleFolderMenu = (index, folderId) => {
@@ -115,15 +150,14 @@ export default function SidePanelComponent() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
-                </svg>) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>)}
+                </svg>) : (<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>)}
         </button>
 
         {/* Side Panel - Updated with responsive classes */}
-        <div className={`w-72 bg-[var(--surface-container-lowest)] border-r border-[var(--outline-variant)] flex flex-col fixed h-full overflow-hidden transition-all duration-300
+        <div className={`ml-20 w-72 bg-[var(--surface-container-lowest)] border-r border-[var(--outline-variant)] flex flex-col fixed h-full overflow-hidden transition-all duration-300
                 ${isMobileMenuOpen ? 'left-0' : '-left-72'} md:left-0 z-40`}>
 
             <div className="p-4 border-b border-[var(--outline-variant)]">
@@ -139,38 +173,48 @@ export default function SidePanelComponent() {
                 </button>
 
                 <div className="px-2 space-y-1 relative">
-                    {folders.map((folder, index) => (<div key={folder.id} className="space-y-1">
+                    {folders.map((folder, index) => (<div
+                        key={folder.id}
+                        className="space-y-1 border-b border-[var(--primary)] last:border-b-0 pb-1"
+                    >
                         <div
                             className="flex flex-row items-center bg-(--surface-dim) justify-between font-medium p-2 rounded-lg truncate group"
                             title={folder.name}
                         >
+                            {/* Folder content remains the same */}
                             <div
                                 className="flex items-center flex-1 cursor-pointer"
                                 onClick={() => toggleFolderExpansion(folder.id)}
                             >
-                                        <span className="mr-2 text-[var(--on-surface-variant)]">
-                                          {expandedFolders[folder.id] ? (
-                                              <svg fill="fill(--primary)" className="fill(--primary) size-4"
-                                                   id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
-                                                   viewBox="0 0 16 16">
-                                                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                                  <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
-                                                     strokeLinejoin="round"></g>
-                                                  <g id="SVGRepo_iconCarrier">
-                                                      <polygon className="cls-1"
-                                                               points="3.5 4.737 4.61 4.005 7.967 9.477 11.397 4 12.5 4.743 7.955 12 3.5 4.737"></polygon>
-                                                  </g>
-                                              </svg>) : (<Image
-                                              src="/expanderright.svg"
-                                              height={16}
-                                              width={16}
-                                              alt="Collapsed"
-                                              className="size-4 fill-[var(--on-background)] hover:fill-[var(--primary)] inline-block"
-                                          />)}
-                                        </span>
+                              <span className="mr-2 text-[var(--on-surface-variant)]">
+                                {expandedFolders[folder.id] ? (
+                                    <svg fill="fill-(--primary)" className="fill-(--primary) size-4"
+                                         id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 16 16">
+                                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
+                                           strokeLinejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <polygon className="cls-1"
+                                                     points="3.5 4.737 4.61 4.005 7.967 9.477 11.397 4 12.5 4.743 7.955 12 3.5 4.737"></polygon>
+                                        </g>
+                                    </svg>) : (
+                                    <svg fill="fill-(--primary)" className="fill-(--primary) size-4" id="Layer_1"
+                                         data-name="Layer 1"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 16 16">
+                                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
+                                           strokeLinejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <polygon className="cls-1"
+                                                     points="4.737 12.5 4.005 11.39 9.477 8.033 4 4.603 4.743 3.5 12 8.045 4.737 12.5"></polygon>
+                                        </g>
+                                    </svg>)}
+                              </span>
                                 <span className="text-[var(--on-surface)]">
-                                            {folder.name}
-                                        </span>
+                                {folder.name}
+                              </span>
                             </div>
                             <button
                                 className="cursor-pointer three-dots-button opacity-0 group-hover:opacity-100 transition-opacity"
@@ -267,19 +311,48 @@ export default function SidePanelComponent() {
                             setIsFolderModalOpen(false);
                             setError("");
                         }}
-                        className="px-4 py-2 border border-[var(--outline-variant)] rounded hover:bg-[var(--surface-container-high)] text-[var(--on-surface)]"
+                        className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface)"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleAddFolder}
-                        className="px-4 py-2 bg-[var(--primary)] text-[var(--on-primary)] rounded hover:bg-[var(--primary-container)]"
+                        className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
                     >
                         Create
                     </button>
                 </div>
             </div>
         </div>)}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div
+                    className="bg-[var(--surface)] p-6 rounded-lg shadow-lg w-96 border border-[var(--outline-variant)]">
+                    <h3 className="text-xl font-semibold mb-4 text-[var(--on-surface)]">Delete Folder</h3>
+                    <p className="mb-6 text-[var(--on-surface-variant)]">
+                        Are you sure you want to delete this folder? This action cannot be undone and will delete all
+                        notes stored within the folder.
+                    </p>
+
+                    <div className="flex justify-end gap-2">
+                        <button
+                            onClick={() => confirmDelete(false)}
+                            className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface)"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => confirmDelete(true)}
+                            className="cursor-pointer px-4 py-2 bg-(--error) text-(--on-error) rounded hover:text-(--on-error-container) hover:bg-(--error-container)"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
 
         {/* Note Creation Modal */}
         {isNoteModalOpen && (<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
