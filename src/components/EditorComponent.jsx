@@ -255,13 +255,15 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
             </header>
 
             {/* Editor/Preview Area */}
-            <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+            <div className="select-text flex-1 overflow-hidden flex flex-col md:flex-row">
                 {/* Editor Panel */}
                 {!isPreview && (
                     <div className="flex-1 h-full flex flex-col border-r border-(--outline-variant)">
                         <div
-                            className="p-2 bg-(--surface-container-high) border-b border-(--outline-variant) flex items-center justify-between">
-                            <span className="text-xs font-medium text-(--on-surface-variant)">MARKDOWN</span>
+                            className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
+                            <span className="select-none text-xs font-medium text-(--on-surface-variant)">
+                                MARKDOWN
+                            </span>
                             <button
                                 onClick={toggleView}
                                 className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
@@ -277,7 +279,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         <textarea
                             value={inputText}
                             onChange={handleTextChange}
-                            className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface) text-(--on-surface)"
+                            className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface-container-high) text-(--on-surface)"
                             placeholder="Write your markdown here..."
                             spellCheck="false"
                         />
@@ -288,8 +290,8 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                 {isPreview && (
                     <div className="flex-1 h-full flex flex-col overflow-hidden">
                         <div
-                            className="p-2 bg-(--surface-container-high) border-b border-(--outline-variant) flex items-center justify-between">
-                            <span className="text-xs font-medium text-(--on-surface-variant)">PREVIEW</span>
+                            className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
+                            <span className="select-none text-xs font-medium text-(--on-surface-variant)">PREVIEW</span>
                             <button
                                 onClick={toggleView}
                                 className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
@@ -302,7 +304,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                             </button>
                         </div>
                         <div
-                            className="flex-1 overflow-y-auto p-6 prose prose-sm max-w-none bg-(--surface) dark:prose-invert">
+                            className="flex-1 overflow-y-auto p-6 prose prose-sm max-w-none bg-(--surface-container-high) dark:prose-invert">
                             <Markdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}

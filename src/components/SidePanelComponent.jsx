@@ -296,12 +296,12 @@ export default function SidePanelComponent() {
                                     {notes[folder.id].map(note => (
                                         <div
                                             key={note.id}
-                                            className={`group relative p-2 pl-3 text-sm rounded cursor-pointer ${activeNote?.id === note.id ? 'bg-[var(--primary-container)] text-[var(--on-primary-container)]' : 'hover:bg-[var(--surface-container-high)] text-[var(--on-surface-variant)] hover:text-[var(--on-surface)]'}`}
+                                            className={`mb-2 group relative p-2 pl-3 text-sm rounded cursor-pointer ${activeNote?.id === note.id ? 'bg-[var(--primary-container)] text-[var(--on-primary-container)]' : 'hover:bg-[var(--surface-container-high)] text-[var(--on-surface-variant)] hover:text-[var(--on-surface)]'}`}
                                             onClick={() => handleNoteClick(note)}
                                         >
                                             {note.title || "Untitled Note"}
                                             <button
-                                                className="absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="cursor-pointer absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     if (noteToModify?.id === note.id) {
