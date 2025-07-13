@@ -336,11 +336,62 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                         className="text-2xl font-bold mt-6 mb-4 text-(--on-surface)" {...props} />,
                                     h2: ({node, ...props}) => <h2
                                         className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
+                                    h3: ({node, ...props}) => <h2
+                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
+                                    h4: ({node, ...props}) => <h2
+                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
+                                    h5: ({node, ...props}) => <h2
+                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
                                     p: ({node, ...props}) => <p className="my-3 text-(--on-surface)" {...props} />,
                                     a: ({node, ...props}) => <a
                                         className="text-(--primary) hover:underline" {...props} />,
                                     blockquote: ({node, ...props}) => <blockquote
                                         className="border-l-4 border-(--primary) pl-4 italic text-(--on-surface-variant)" {...props} />,
+                                    ul: ({node, ...props}) => (
+                                        <ul className="my-3 pl-6 list-disc text-(--on-surface)" {...props} />
+                                    ),
+                                    ol: ({node, ...props}) => (
+                                        <ol className="my-3 pl-6 list-decimal text-(--on-surface)" {...props} />
+                                    ),
+                                    li: ({node, className, children, ...props}) => {
+                                        // Check if this is a task list item
+                                        const isTaskItem = className?.includes('task-list-item');
+
+                                        return (
+                                            <li
+                                                className={`text-(--on-surface) my-1 ${isTaskItem ? 'flex items-start' : ''} ${className || ''}`}
+                                                {...props}
+                                            >
+                                                {children}
+                                            </li>
+                                        );
+                                    },
+                                    input: ({node, className, checked, ...props}) => {
+                                        if (props.type === 'checkbox') {
+                                            return (
+                                                <input
+                                                    type="checkbox"
+                                                    className={`h-4 w-4 mt-1 mr-2 rounded text-(--primary) border-(--outline) focus:ring-(--primary) ${className || ''}`}
+                                                    checked={checked}
+                                                    {...props}
+                                                />
+                                            );
+                                        }
+                                        return <input {...props} />;
+                                    },
+                                    del: ({node, ...props}) => (
+                                        <del className="text-(--on-surface)" {...props} />
+                                    ),
+
+                                    // Emphasis
+                                    em: ({node, ...props}) => (
+                                        <em className="italic text-(--on-surface)" {...props} />
+                                    ),
+
+                                    // Strong
+                                    strong: ({node, ...props}) => (
+                                        <strong className="font-semibold text-(--on-surface)" {...props} />
+                                    ),
                                 }}
                             >
                                 {inputText}
