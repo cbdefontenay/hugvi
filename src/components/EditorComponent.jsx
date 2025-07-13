@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -42,6 +42,25 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const [showThemeMenu, setShowThemeMenu] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState("nord");
 
+    const handleKeyDown = useCallback((e) => {
+        // Ctrl+S - Save note
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            if (activeNote && isEdited) {
+                onSaveNote(activeNote.id, inputText);
+                setIsEdited(false);
+            }
+        }
+    }, [activeNote, isEdited, inputText, onSaveNote]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleKeyDown]);
+
     // Get theme style object by name
     const getThemeStyle = (themeName) => {
         switch (themeName) {
@@ -78,7 +97,6 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         }
     }, []);
 
-    // Save theme to localStorage when it changes
     useEffect(() => {
         if (selectedTheme) {
             localStorage.setItem("syntaxTheme", selectedTheme);
@@ -156,7 +174,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     }
 
     return (
-        <div className="ml-20 h-full flex flex-col bg-(--surface-container-low)">
+        <div className=" h-full flex flex-col bg-(--surface-container-low)">
             {/* Header Bar */}
             <header
                 className="flex items-center justify-between p-4 border-b border-(--outline-variant) bg-(--surface)">

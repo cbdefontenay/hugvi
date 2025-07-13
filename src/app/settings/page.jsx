@@ -98,46 +98,6 @@ export default function Settings() {
                                                 className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">S</kbd>
                                         </div>
                                     </div>
-                                    <div>
-                                        <h3 className="font-medium">Toggle Sidebar</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">B</kbd>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-medium">Search Notes</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">P</kbd>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-medium">Toggle Dark Mode</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Shift</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">D</kbd>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-medium">Format Code</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">Shift</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-[var(--surface-container-high)] rounded text-sm">F</kbd>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
