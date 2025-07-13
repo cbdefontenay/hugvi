@@ -10,6 +10,7 @@
     "npm:@tauri-apps/plugin-sql@2.3": "2.3.0",
     "npm:eslint-config-next@15.3.5": "15.3.5_eslint@9.30.1_@typescript-eslint+parser@8.36.0__eslint@9.30.1__typescript@5.8.3_eslint-plugin-import@2.32.0__eslint@9.30.1",
     "npm:eslint@9": "9.30.1",
+    "npm:next-themes@~0.4.6": "0.4.6_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:next@15.3.5": "15.3.5_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:react-dom@19": "19.1.0_react@19.1.0",
     "npm:react-markdown@^10.1.0": "10.1.0_@types+react@19.1.8_react@19.1.0",
@@ -2744,6 +2745,13 @@
     "natural-compare@1.4.0": {
       "integrity": "sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw=="
     },
+    "next-themes@0.4.6_react@19.1.0_react-dom@19.1.0__react@19.1.0": {
+      "integrity": "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==",
+      "dependencies": [
+        "react",
+        "react-dom"
+      ]
+    },
     "next@15.3.5_react@19.1.0_react-dom@19.1.0__react@19.1.0": {
       "integrity": "sha512-RkazLBMMDJSJ4XZQ81kolSpwiCt907l0xcgcpF4xC2Vml6QVcPNXW0NQRwQ80FFtSn7UM52XN0anaw8TEJXaiw==",
       "dependencies": [
@@ -3700,6 +3708,7 @@
         "npm:@tauri-apps/plugin-sql@2.3",
         "npm:eslint-config-next@15.3.5",
         "npm:eslint@9",
+        "npm:next-themes@~0.4.6",
         "npm:next@15.3.5",
         "npm:react-dom@19",
         "npm:react-markdown@^10.1.0",
