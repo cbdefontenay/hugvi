@@ -382,13 +382,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                     del: ({node, ...props}) => (
                                         <del className="text-(--on-surface)" {...props} />
                                     ),
-
-                                    // Emphasis
                                     em: ({node, ...props}) => (
                                         <em className="italic text-(--on-surface)" {...props} />
                                     ),
-
-                                    // Strong
                                     strong: ({node, ...props}) => (
                                         <strong className="font-semibold text-(--on-surface)" {...props} />
                                     ),
