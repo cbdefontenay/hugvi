@@ -1,27 +1,20 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "hugvi-app",
-  "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "productName": "hugvi",
+  "version": "1.1.0",
+  "identifier": "com.cyprien.hugvi",
   "build": {
     "beforeDevCommand": "deno task dev",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "deno task build",
-    "devUrl": "http://localhost:3000",
-    "frontendDist": "../out"
-  },
-  "plugins": {
-    "sql": {
-      "preload": ["sqlite:folders.db"]
-    }
+    "frontendDist": "../dist"
   },
   "app": {
     "windows": [
       {
         "title": "Hugvi",
         "width": 800,
-        "height": 600,
-        "resizable": true,
-        "fullscreen": false
+        "height": 600
       }
     ],
     "security": {
@@ -38,5 +31,12 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "sql": {
+      "preload": [
+        "sqlite:folders.db"
+      ]
+    }
   }
 }

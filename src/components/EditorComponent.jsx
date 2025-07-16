@@ -1,5 +1,3 @@
-"use client";
-
 import {useState, useEffect, useCallback} from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -18,6 +16,7 @@ import {
     vs,
     vscDarkPlus
 } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {useTranslation} from "react-i18next";
 
 // Available themes with display names
 const THEMES = [
@@ -35,6 +34,7 @@ const THEMES = [
 ];
 
 export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
+    const {t} = useTranslation();
     const [inputText, setInputText] = useState("");
     const [isEdited, setIsEdited] = useState(false);
     const [isPreview, setIsPreview] = useState(false);
@@ -43,7 +43,6 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const [selectedTheme, setSelectedTheme] = useState("nord");
 
     const handleKeyDown = useCallback((e) => {
-        // Ctrl+S - Save note
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
             if (activeNote && isEdited) {
@@ -55,13 +54,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
-    // Get theme style object by name
     const getThemeStyle = (themeName) => {
         switch (themeName) {
             case "atomDark":
@@ -89,7 +84,6 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         }
     };
 
-    // Load saved theme from localStorage
     useEffect(() => {
         const savedTheme = localStorage.getItem("syntaxTheme");
         if (savedTheme && THEMES.some(t => t.name === savedTheme)) {
@@ -98,9 +92,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     }, []);
 
     useEffect(() => {
-        if (selectedTheme) {
-            localStorage.setItem("syntaxTheme", selectedTheme);
-        }
+        if (selectedTheme) localStorage.setItem("syntaxTheme", selectedTheme);
     }, [selectedTheme]);
 
     useEffect(() => {
@@ -134,9 +126,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     };
 
     const toggleView = () => setIsPreview(!isPreview);
-
     const toggleThemeMenu = () => setShowThemeMenu(!showThemeMenu);
-
     const selectTheme = (themeName) => {
         setSelectedTheme(themeName);
         setShowThemeMenu(false);
@@ -144,9 +134,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
 
     if (!activeNote) {
         return (
-            <div className="flex items-center justify-center h-full bg-(--surface-container-low)]">
+            <div className="flex items-center justify-center h-full bg-(--surface-container-low)">
                 <div className="text-center p-8 max-w-md">
-                    <div className="text-(--primary)] mb-4">
+                    <div className="flex justify-center text-(--primary) mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -156,32 +146,27 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                             <path d="M10 9H8"/>
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-(--on-surface)] mb-2">
-                        No Note Selected
+                    <h2 className="text-2xl font-bold text-(--on-surface) mb-2">
+                        {t("editor.noNoteSelected")}
                     </h2>
-                    <p className="text-(--on-surface-variant)] mb-6">
-                        Select a note or create a new one to begin
+                    <p className="text-(--on-surface-variant) mb-6">
+                        {t("editor.selectNotePrompt")}
                     </p>
-                    <button
-                        onClick={onCloseNote}
-                        className="px-4 py-2 rounded-lg bg-(--primary-container)] text-(--on-primary-container)] hover:bg-(--primary-fixed-dim)] transition-colors"
-                    >
-                        Explore Notes
-                    </button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className=" h-full flex flex-col bg-(--surface-container-low)">
+        <div className="h-full flex flex-col bg-(--surface-container-low)">
             {/* Header Bar */}
             <header
                 className="flex items-center justify-between p-4 border-b border-(--outline-variant) bg-(--surface)">
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={onCloseNote}
-                        className="p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
+                        className="cursor-pointer p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
+                        aria-label={t("editor.closeNote")}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -189,13 +174,13 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         </svg>
                     </button>
                     <h1 className="text-lg font-semibold text-(--on-surface) truncate max-w-xs md:max-w-md">
-                        {activeNote.title || "Untitled Note"}
+                        {activeNote.title || t("editor.defaultNoteTitle")}
                     </h1>
                 </div>
 
                 <div className="flex items-center space-x-2">
                     <span className="text-sm text-(--on-surface-variant)">
-                        {wordCount} words
+                        {wordCount} {t("editor.words")}
                     </span>
 
                     {/* Theme Selector */}
@@ -203,8 +188,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         <button
                             onClick={toggleThemeMenu}
                             className="cursor-pointer flex items-center space-x-1 px-3 py-1 rounded-md text-sm bg-(--surface-container-high) text-(--on-surface-variant) hover:bg-(--surface-container)"
+                            aria-label={t("editor.selectTheme")}
                         >
-                            <span>Theme</span>
+                            <span>{t("editor.theme")}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                  fill="none"
                                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -235,13 +221,13 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                             onClick={() => setIsPreview(false)}
                             className={`cursor-pointer px-3 py-1 rounded-md text-sm ${!isPreview ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
                         >
-                            Edit
+                            {t("editor.edit")}
                         </button>
                         <button
                             onClick={() => setIsPreview(true)}
                             className={`cursor-pointer px-3 py-1 rounded-md text-sm ${isPreview ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
                         >
-                            Preview
+                            {t("editor.preview")}
                         </button>
                     </div>
                     <button
@@ -249,7 +235,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         disabled={!isEdited}
                         className={`px-4 py-2 rounded-lg text-sm ${isEdited ? 'bg-(--primary) text-(--on-primary) hover:bg-(--primary-container) hover:text-(--on-primary-container) cursor-pointer' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
                     >
-                        Save
+                        {t("editor.save")}
                     </button>
                 </div>
             </header>
@@ -262,11 +248,12 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
-                                MARKDOWN
+                                {t("editor.markdown")}
                             </span>
                             <button
                                 onClick={toggleView}
                                 className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
+                                aria-label={t("editor.switchToPreview")}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none"
@@ -280,7 +267,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                             value={inputText}
                             onChange={handleTextChange}
                             className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface-container-high) text-(--on-surface)"
-                            placeholder="Write your markdown here..."
+                            placeholder={t("editor.markdownPlaceholder")}
                             spellCheck="false"
                         />
                     </div>
@@ -291,10 +278,13 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <div className="flex-1 h-full flex flex-col overflow-hidden">
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
-                            <span className="select-none text-xs font-medium text-(--on-surface-variant)">PREVIEW</span>
+                            <span className="select-none text-xs font-medium text-(--on-surface-variant)">
+                                {t("editor.preview")}
+                            </span>
                             <button
                                 onClick={toggleView}
                                 className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
+                                aria-label={t("editor.switchToEditor")}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none"
@@ -347,16 +337,12 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                         className="text-(--primary) hover:underline" {...props} />,
                                     blockquote: ({node, ...props}) => <blockquote
                                         className="border-l-4 border-(--primary) pl-4 italic text-(--on-surface-variant)" {...props} />,
-                                    ul: ({node, ...props}) => (
-                                        <ul className="my-3 pl-6 list-disc text-(--on-surface)" {...props} />
-                                    ),
-                                    ol: ({node, ...props}) => (
-                                        <ol className="my-3 pl-6 list-decimal text-(--on-surface)" {...props} />
-                                    ),
+                                    ul: ({node, ...props}) => <ul
+                                        className="my-3 pl-6 list-disc text-(--on-surface)" {...props} />,
+                                    ol: ({node, ...props}) => <ol
+                                        className="my-3 pl-6 list-decimal text-(--on-surface)" {...props} />,
                                     li: ({node, className, children, ...props}) => {
-                                        // Check if this is a task list item
                                         const isTaskItem = className?.includes('task-list-item');
-
                                         return (
                                             <li
                                                 className={`text-(--on-surface) my-1 ${isTaskItem ? 'flex items-start' : ''} ${className || ''}`}
@@ -379,15 +365,10 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                         }
                                         return <input {...props} />;
                                     },
-                                    del: ({node, ...props}) => (
-                                        <del className="text-(--on-surface)" {...props} />
-                                    ),
-                                    em: ({node, ...props}) => (
-                                        <em className="italic text-(--on-surface)" {...props} />
-                                    ),
-                                    strong: ({node, ...props}) => (
-                                        <strong className="font-semibold text-(--on-surface)" {...props} />
-                                    ),
+                                    del: ({node, ...props}) => <del className="text-(--on-surface)" {...props} />,
+                                    em: ({node, ...props}) => <em className="italic text-(--on-surface)" {...props} />,
+                                    strong: ({node, ...props}) => <strong
+                                        className="font-semibold text-(--on-surface)" {...props} />,
                                 }}
                             >
                                 {inputText}
@@ -409,8 +390,8 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                 </div>
                 <div className="flex items-center space-x-4">
                     <span>{new Date().toLocaleDateString()}</span>
-                    <span>{wordCount} words</span>
-                    <span>{inputText.length} characters</span>
+                    <span>{wordCount} {t("editor.words")}</span>
+                    <span>{inputText.length} {t("editor.characters")}</span>
                 </div>
             </div>
         </div>

@@ -1,0 +1,77 @@
+{
+  "settings": {
+    "header": "Settings",
+    "tabs": {
+      "appearance": "Appearance",
+      "language": "Languages",
+      "keyboard": "Keyboard Shortcuts",
+      "about": "About"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "darkMode": "Dark Mode",
+      "description": "Switch between light and dark theme"
+    },
+    "language": {
+      "title": "Change the language"
+    },
+    "keyboard": {
+      "title": "Keyboard Shortcuts",
+      "newFolder": "New Folder",
+      "saveNote": "Save Note"
+    },
+    "about": {
+      "title": "About",
+      "descriptionTitle": "Description",
+      "description": "A simple and elegant code note-taking application built with Tauri and React. Organize your code snippets, notes, and ideas in one place. Everything you create is yours and stored locally with SQLite.",
+      "links": "Links"
+    }
+  },
+  "navbar": {
+    "home": "Home",
+    "settings": "Settings",
+    "collapse": "Collapse"
+  },
+  "panel": {
+    "folders": "Folders",
+    "addFolder": "Add Folder",
+    "folderOptions": "Folder options",
+    "untitledNote": "Untitled Note",
+    "noteOptions": "Note options",
+    "renameNote": "Rename Note",
+    "deleteNote": "Delete Note",
+    "noteTitle": "Note title",
+    "create": "Create",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "deleteNoteConfirm": "Delete Note",
+    "deleteNoteWarning": "Are you sure you want to delete this note? This action cannot be undone.",
+    "delete": "Delete",
+    "createNote": "Create Note",
+    "renameFolder": "Rename Folder",
+    "deleteFolder": "Delete Folder",
+    "createFolder": "Create Folder",
+    "folderName": "Folder name",
+    "deleteFolderConfirm": "Delete Folder",
+    "deleteFolderWarning": "Are you sure you want to delete this folder? This will also delete all notes inside it.",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "editor": {
+    "noNoteSelected": "No Note Selected",
+    "selectNotePrompt": "Select a note or create a new one to begin",
+    "defaultNoteTitle": "Untitled Note",
+    "closeNote": "Close note",
+    "words": "words",
+    "theme": "Theme",
+    "selectTheme": "Select theme",
+    "edit": "Edit",
+    "preview": "Preview",
+    "save": "Save",
+    "markdown": "MARKDOWN",
+    "switchToPreview": "Switch to preview",
+    "markdownPlaceholder": "Write your markdown here...",
+    "switchToEditor": "Switch to editor",
+    "characters": "characters"
+  }
+}

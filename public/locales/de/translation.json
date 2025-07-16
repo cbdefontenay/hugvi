@@ -1,0 +1,77 @@
+{
+  "settings": {
+    "header": "Einstellungen",
+    "tabs": {
+      "appearance": "Darstellung",
+      "language": "Sprachen",
+      "keyboard": "Tastenkombinationen",
+      "about": "Über"
+    },
+    "appearance": {
+      "title": "Darstellung",
+      "darkMode": "Dunkelmodus",
+      "description": "Zwischen hellem und dunklem Thema wechseln"
+    },
+    "language": {
+      "title": "Sprache ändern"
+    },
+    "keyboard": {
+      "title": "Tastenkombinationen",
+      "newFolder": "Neuer Ordner",
+      "saveNote": "Notiz speichern"
+    },
+    "about": {
+      "title": "Über",
+      "descriptionTitle": "Beschreibung",
+      "description": "Eine einfache und elegante Notizen-App für Code, entwickelt mit Tauri und React. Organisiere deine Code-Snippets, Notizen und Ideen an einem Ort. Alles, was du erstellst, gehört dir und wird lokal mit SQLite gespeichert.",
+      "links": "Links"
+    }
+  },
+  "navbar": {
+    "home": "Startseite",
+    "settings": "Einstellungen",
+    "collapse": "Einklappen"
+  },
+  "panel": {
+    "folders": "Ordner",
+    "addFolder": "Ordner hinzufügen",
+    "folderOptions": "Ordneroptionen",
+    "untitledNote": "Unbenannte Notiz",
+    "noteOptions": "Notizoptionen",
+    "renameNote": "Notiz umbenennen",
+    "deleteNote": "Notiz löschen",
+    "noteTitle": "Notizname",
+    "create": "Erstellen",
+    "cancel": "Abbrechen",
+    "rename": "Umbenennen",
+    "deleteNoteConfirm": "Notiz löschen",
+    "deleteNoteWarning": "Sind Sie sicher, dass Sie diese Notiz löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "delete": "Löschen",
+    "createNote": "Notiz erstellen",
+    "renameFolder": "Ordner umbenennen",
+    "deleteFolder": "Ordner löschen",
+    "createFolder": "Ordner erstellen",
+    "folderName": "Ordnername",
+    "deleteFolderConfirm": "Ordner löschen",
+    "deleteFolderWarning": "Sind Sie sicher, dass Sie diesen Ordner löschen möchten? Alle darin enthaltenen Notizen werden ebenfalls gelöscht.",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
+  },
+  "editor": {
+    "noNoteSelected": "Keine Notiz ausgewählt",
+    "selectNotePrompt": "Wählen Sie eine Notiz aus oder erstellen Sie eine neue",
+    "defaultNoteTitle": "Unbenannte Notiz",
+    "closeNote": "Notiz schließen",
+    "words": "Wörter",
+    "theme": "Thema",
+    "selectTheme": "Thema auswählen",
+    "edit": "Bearbeiten",
+    "preview": "Vorschau",
+    "save": "Speichern",
+    "markdown": "MARKDOWN",
+    "switchToPreview": "Zur Vorschau wechseln",
+    "markdownPlaceholder": "Schreiben Sie hier Ihren Markdown-Text...",
+    "switchToEditor": "Zum Editor wechseln",
+    "characters": "Zeichen"
+  }
+}

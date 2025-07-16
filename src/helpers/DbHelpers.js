@@ -1,7 +1,14 @@
 import Database from "@tauri-apps/plugin-sql";
-import {confirm} from "@tauri-apps/plugin-dialog";
 
-export const handleAddFolderAsync = async (folderName, setFolderName, setIsModalOpen, folders, setFolders, setError, db) => {
+export const handleAddFolderAsync = async (
+    folderName,
+    setFolderName,
+    setIsModalOpen,
+    folders,
+    setFolders,
+    setError,
+    db
+) => {
     const name = folderName.trim();
     if (!name) {
         setError("Folder name cannot be empty");
@@ -9,17 +16,25 @@ export const handleAddFolderAsync = async (folderName, setFolderName, setIsModal
     }
 
     try {
-        const result = await db.select("SELECT name FROM folders WHERE name = $1", [name]);
+        const result = await db.select("SELECT name FROM folders WHERE name = $1", [
+            name,
+        ]);
         if (result.length > 0) {
             setError("A folder with this name already exists");
             return;
         }
 
         console.log("Inserting folder...");
-        await db.execute("INSERT INTO folders (name, date_created) VALUES ($1, datetime('now'))", [name]);
+        await db.execute(
+            "INSERT INTO folders (name, date_created) VALUES ($1, datetime('now'))",
+            [name]
+        );
 
         console.log("Fetching new folder...");
-        const newFolder = await db.select("SELECT id, name FROM folders WHERE name = $1", [name]);
+        const newFolder = await db.select(
+            "SELECT id, name FROM folders WHERE name = $1",
+            [name]
+        );
         console.log("New folder:", newFolder);
 
         setFolders([...folders, newFolder[0]]);
@@ -33,10 +48,50 @@ export const handleAddFolderAsync = async (folderName, setFolderName, setIsModal
     }
 };
 
+export const handleDeleteFolderAsync = async (
+    folderId,
+    setFolders,
+    notes,
+    folders,
+    confirmation,
+    db,
+    setMenuOpen,
+    setNotes,
+    activeNote,
+    setActiveNote
+) => {
+    if (!confirmation) return;
+
+    try {
+        await db.execute("DELETE FROM note WHERE folder_id = $1", [folderId]);
+
+        await db.execute("DELETE FROM folders WHERE id = $1", [folderId]);
+        setFolders(folders.filter((f) => f.id !== folderId));
+
+        const newNotes = {...notes};
+        delete newNotes[folderId];
+        setNotes(newNotes);
+
+        if (
+            activeNote &&
+            newNotes[folderId]?.some((note) => note.id === activeNote.id)
+        ) {
+            setActiveNote(null);
+        }
+
+        setMenuOpen(null);
+
+        await maybeVacuum(db, 'folders');
+    } catch (e) {
+        console.error("Failed to delete folder:", e);
+        throw new Error("Failed to delete folder");
+    }
+};
+
 export const deleteFolderAsync = async (folderId, folders, setFolders, db) => {
     try {
         await db.execute("DELETE FROM folders WHERE id = $1", [folderId]);
-        setFolders(folders.filter(folder => folder.id !== folderId));
+        setFolders(folders.filter((folder) => folder.id !== folderId));
         return true;
     } catch (e) {
         console.error("Failed to delete folder:", e);
@@ -69,18 +124,19 @@ export const handleCreateNoteAsync = async (
         );
 
         const updatedNotes = await db.select(
-            "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1",
+            "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1 ORDER BY date_created ASC",
             [folderId]
         );
 
-        setNotes(prev => ({
-            ...prev,
-            [folderId]: updatedNotes
-        }));
+        setNotes((prev) => {
+            const newNotes = {...prev};
+            newNotes[folderId] = updatedNotes;
+            return newNotes;
+        });
 
-        setExpandedFolders(prev => ({
+        setExpandedFolders((prev) => ({
             ...prev,
-            [folderId]: true
+            [folderId]: true,
         }));
 
         setNoteName("");
@@ -96,14 +152,17 @@ export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
     try {
         const db = await Database.load("sqlite:app.db");
 
-        const folderResult = await db.select("SELECT id, name FROM folders");
+        const folderResult = await db.select(
+            "SELECT id, name FROM folders ORDER BY date_created ASC"
+        );
+
         if (folderResult && Array.isArray(folderResult)) {
             setFolders(folderResult);
 
             const notesMap = {};
             for (const folder of folderResult) {
                 const noteResult = await db.select(
-                    "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1",
+                    "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1 ORDER BY date_created ASC",
                     [folder.id]
                 );
                 notesMap[folder.id] = noteResult || [];
@@ -123,15 +182,15 @@ export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
 
 export const handleSaveNoteAsync = async (db, noteId, newContent, setNotes) => {
     try {
-        await db.execute(
-            "UPDATE note SET content = $1 WHERE id = $2",
-            [newContent, noteId]
-        );
+        await db.execute("UPDATE note SET content = $1 WHERE id = $2", [
+            newContent,
+            noteId,
+        ]);
 
-        setNotes(prev => {
+        setNotes((prev) => {
             const updatedNotes = {...prev};
             for (const folderId in updatedNotes) {
-                updatedNotes[folderId] = updatedNotes[folderId].map(note =>
+                updatedNotes[folderId] = updatedNotes[folderId].map((note) =>
                     note.id === noteId ? {...note, content: newContent} : note
                 );
             }
@@ -143,60 +202,24 @@ export const handleSaveNoteAsync = async (db, noteId, newContent, setNotes) => {
     }
 };
 
-export const handleDeleteFolderAsync = async (
-    folderId,
-    setFolders,
-    notes,
-    folders,
-    confirmation,
-    db,
-    setMenuOpen,
-    setNotes,
-    activeNote,
-    setActiveNote
-) => {
-    if (!confirmation) return;
-
-    try {
-        // Delete all notes in the folder first
-        await db.execute("DELETE FROM note WHERE folder_id = $1", [folderId]);
-
-        // Then delete the folder
-        await db.execute("DELETE FROM folders WHERE id = $1", [folderId]);
-
-        // Update state
-        setFolders(folders.filter(f => f.id !== folderId));
-
-        // Remove notes from state
-        const newNotes = {...notes};
-        delete newNotes[folderId];
-        setNotes(newNotes);
-
-        // Clear active note if it was in this folder
-        if (activeNote && newNotes[folderId]?.some(note => note.id === activeNote.id)) {
-            setActiveNote(null);
-        }
-
-        setMenuOpen(null);
-    } catch (e) {
-        console.error("Failed to delete folder:", e);
-        throw new Error("Failed to delete folder");
-    }
-};
-
 export const handleRenameNoteAsync = async (db, noteId, newTitle, setNotes) => {
     try {
-        await db.execute(
-            "UPDATE note SET title = $1 WHERE id = $2",
-            [newTitle, noteId]
-        );
+        await db.execute("UPDATE note SET title = $1 WHERE id = $2", [
+            newTitle,
+            noteId,
+        ]);
 
-        setNotes(prev => {
+        setNotes((prev) => {
             const updatedNotes = {...prev};
             for (const folderId in updatedNotes) {
-                updatedNotes[folderId] = updatedNotes[folderId].map(note =>
-                    note.id === noteId ? {...note, title: newTitle} : note
-                );
+                const noteIndex = updatedNotes[folderId].findIndex(n => n.id === noteId);
+                if (noteIndex !== -1) {
+                    updatedNotes[folderId][noteIndex] = {
+                        ...updatedNotes[folderId][noteIndex],
+                        title: newTitle
+                    };
+                    break;
+                }
             }
             return updatedNotes;
         });
@@ -217,10 +240,12 @@ export const handleDeleteNoteAsync = async (
     try {
         await db.execute("DELETE FROM note WHERE id = $1", [noteId]);
 
-        setNotes(prev => {
+        setNotes((prev) => {
             const updatedNotes = {...prev};
             if (updatedNotes[folderId]) {
-                updatedNotes[folderId] = updatedNotes[folderId].filter(note => note.id !== noteId);
+                updatedNotes[folderId] = updatedNotes[folderId].filter(
+                    (note) => note.id !== noteId
+                );
             }
             return updatedNotes;
         });
@@ -228,8 +253,42 @@ export const handleDeleteNoteAsync = async (
         if (activeNote && activeNote.id === noteId) {
             setActiveNote(null);
         }
+
+        await maybeVacuum(db, 'notes');
     } catch (e) {
         console.error("Failed to delete note:", e);
         throw new Error("Failed to delete note");
+    }
+};
+
+// Vaccum needed sometimes:
+let deleteCounters = {
+    notes: 0,
+    folders: 0
+};
+
+const VACUUM_THRESHOLDS = {
+    NOTES: 10,
+    FOLDERS: 4
+};
+
+export const maybeVacuum = async (db, type) => {
+    deleteCounters[type]++;
+
+    if (deleteCounters.notes >= VACUUM_THRESHOLDS.NOTES ||
+        deleteCounters.folders >= VACUUM_THRESHOLDS.FOLDERS) {
+        try {
+            console.log("Running VACUUM due to threshold reached");
+            await db.execute("VACUUM");
+            console.log("VACUUM completed successfully");
+
+            // Reset counters after vacuum
+            deleteCounters = {
+                notes: 0,
+                folders: 0
+            };
+        } catch (e) {
+            console.error("Failed to execute VACUUM:", e);
+        }
     }
 };

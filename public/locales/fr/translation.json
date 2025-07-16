@@ -1,0 +1,77 @@
+{
+  "settings": {
+    "header": "Paramètres",
+    "tabs": {
+      "appearance": "Apparence",
+      "language": "Langues",
+      "keyboard": "Raccourcis clavier",
+      "about": "À propos"
+    },
+    "appearance": {
+      "title": "Apparence",
+      "darkMode": "Mode sombre",
+      "description": "Basculer entre le thème clair et sombre"
+    },
+    "language": {
+      "title": "Changer la langue"
+    },
+    "keyboard": {
+      "title": "Raccourcis clavier",
+      "newFolder": "Nouveau dossier",
+      "saveNote": "Enregistrer la note"
+    },
+    "about": {
+      "title": "À propos",
+      "descriptionTitle": "Description",
+      "description": "Une application de prise de notes de code simple et élégante construite avec Tauri et React. Organisez vos extraits de code, notes et idées en un seul endroit. Tout ce que vous créez vous appartient et est stocké localement avec SQLite.",
+      "links": "Liens"
+    }
+  },
+  "navbar": {
+    "home": "Accueil",
+    "settings": "Paramètres",
+    "collapse": "Réduire"
+  },
+  "panel": {
+    "folders": "Dossiers",
+    "addFolder": "Ajouter un dossier",
+    "folderOptions": "Options du dossier",
+    "untitledNote": "Note sans titre",
+    "noteOptions": "Options de la note",
+    "renameNote": "Renommer la note",
+    "deleteNote": "Supprimer la note",
+    "noteTitle": "Titre de la note",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "rename": "Renommer",
+    "deleteNoteConfirm": "Supprimer la note",
+    "deleteNoteWarning": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est irréversible.",
+    "delete": "Supprimer",
+    "createNote": "Créer une note",
+    "renameFolder": "Renommer le dossier",
+    "deleteFolder": "Supprimer le dossier",
+    "createFolder": "Créer un dossier",
+    "folderName": "Nom du dossier",
+    "deleteFolderConfirm": "Supprimer le dossier",
+    "deleteFolderWarning": "Êtes-vous sûr de vouloir supprimer ce dossier ? Toutes les notes qu'il contient seront également supprimées.",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "editor": {
+    "noNoteSelected": "Aucune note sélectionnée",
+    "selectNotePrompt": "Sélectionnez une note ou créez-en une nouvelle pour commencer",
+    "defaultNoteTitle": "Note sans titre",
+    "closeNote": "Fermer la note",
+    "words": "mots",
+    "theme": "Thème",
+    "selectTheme": "Sélectionner un thème",
+    "edit": "Éditer",
+    "preview": "Aperçu",
+    "save": "Enregistrer",
+    "markdown": "MARKDOWN",
+    "switchToPreview": "Basculer vers l'aperçu",
+    "markdownPlaceholder": "Écrivez votre markdown ici...",
+    "switchToEditor": "Basculer vers l'éditeur",
+    "characters": "caractères"
+  }
+}
