@@ -1,14 +1,35 @@
+<img src="logo.svg" alt="Hugvi Logo" style="height: 80px; border-radius: 1em;" />
+
 # Hugvi
 
-A note-taking app, created using `Tauri` and `React`. This app is for desktop only.
+A modern, desktop-only note-taking app built with [`Tauri`](https://tauri.app) and [`React`](https://react.dev), designed for developers who value simplicity, privacy, and speed.
 
-**Hugvi** is not just a note-taking app. The core idea behind it was to allow developers to store code snippets with
-nice and easy syntax highlighting.
-What are the features of Hugvi?
+---
 
-1. Everything is stored locally using SQLite, so your data are private.
-2. The UI and functionalities of **Hugvi** are kept simple.
-3. Multilanguage. Supported languages are: English, German, French.
-4. Dark and Light mode.
+## 🚀 What Makes Hugvi Special?
 
-Behind the scenes, **Hugvi** is powered by the `Tauri` framework, which uses `Rust` for greater speed and control.
+**Hugvi** isn't just another note-taking tool — it's built with a developer-first mindset. Easily manage your code snippets and notes with beautiful, readable syntax highlighting, all in a lightweight desktop app.
+
+### ✅ Features
+
+1. 💾 **Local-First with SQLite**  
+   All your data is stored locally using SQLite — your notes are private and truly yours.
+
+2. 🧠 **Minimal UI, Maximum Focus**  
+   Hugvi follows a _“keep it simple”_ philosophy. No unnecessary features — just what you need to stay productive.
+
+3. 🌍 **Multilingual Support**  
+   Available in **English**, **German**, and **French**.
+
+4. 🌓 **Dark & Light Mode**  
+   Seamlessly switch between dark and light themes to match your environment.
+
+---
+
+## ⚙️ Under the Hood
+
+Built with [**Tauri**](https://tauri.app) for a lightweight, secure desktop experience, and powered by [**Rust**](https://www.rust-lang.org) under the hood for blazing-fast performance and native control.
+
+---
+
+> ✏️ Keep your code notes clean, local, and distraction-free — with Hugvi.
