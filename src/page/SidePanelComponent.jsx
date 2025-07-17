@@ -589,6 +589,12 @@ export default function SidePanelComponent() {
                             type="text"
                             value={folderName}
                             onChange={(e) => setFolderName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleAddFolder();
+                                }
+                            }}
                             className="w-full p-2 border border-(--outline-variant) rounded mb-2"
                             placeholder={t("panel.folderName")}
                             autoFocus
@@ -651,6 +657,12 @@ export default function SidePanelComponent() {
                             type="text"
                             value={noteName}
                             onChange={(e) => setNoteName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleCreateNote();
+                                }
+                            }}
                             className="w-full p-2 border border-(--outline-variant) rounded mb-2"
                             placeholder={t("panel.noteTitle")}
                             autoFocus
