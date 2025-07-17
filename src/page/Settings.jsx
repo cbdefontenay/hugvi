@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useTheme} from "../helpers/ThemeProvider";
 import {useTranslation} from "react-i18next";
 import LanguageSelector from "../components/LanguageSelector.jsx";
+import {Link} from "react-router-dom";
 
 export default function Settings() {
     const [mounted, setMounted] = useState(false);
@@ -95,15 +96,19 @@ export default function Settings() {
                                     <div>
                                         <h3 className="font-medium">{t("settings.keyboard.newFolder")}</h3>
                                         <div className="flex items-center gap-1 mt-1">
-                                            <kbd className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
-                                            <kbd className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">N</kbd>
+                                            <kbd
+                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
+                                            <kbd
+                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">N</kbd>
                                         </div>
                                     </div>
                                     <div>
                                         <h3 className="font-medium">{t("settings.keyboard.saveNote")}</h3>
                                         <div className="flex items-center gap-1 mt-1">
-                                            <kbd className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
-                                            <kbd className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">S</kbd>
+                                            <kbd
+                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
+                                            <kbd
+                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">S</kbd>
                                         </div>
                                     </div>
                                 </div>
@@ -116,27 +121,33 @@ export default function Settings() {
                             <h2 className="text-xl font-semibold">{t("settings.about.title")}</h2>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-(--primary) rounded-lg flex items-center justify-center text-(--on-primary) text-2xl font-bold">
-                                        Hugvi
+                                    <div
+                                        className="w-16 h-16 bg-(--primary) rounded-lg flex items-center justify-center text-(--on-primary) text-2xl font-bold">
+                                        <img src="/logo.svg" alt="logo"/>
                                     </div>
                                     <div>
-                                        <h3 className="font-medium text-lg">Code Notes</h3>
+                                        <h3 className="font-medium text-lg">Hugvi</h3>
                                         <p className="text-sm text-[var(--on-surface-variant)]">Version 1.0.0</p>
                                     </div>
                                 </div>
-                                <div>
+                                <div className="text-justify">
                                     <h3 className="font-medium mb-2">{t("settings.about.descriptionTitle")}</h3>
                                     <p className="text-(--on-surface-variant)">
                                         {t("settings.about.description")}
+                                    </p>
+                                    <p className="text-(--on-surface-variant) mt-2">
+                                        {t("settings.about.descriptionTwo")}
                                     </p>
                                 </div>
                                 <div>
                                     <h3 className="font-medium mb-2">{t("settings.about.links")}</h3>
                                     <div className="flex gap-4">
-                                        <a href="https://github.com/cbdefontenay/hugvi"
-                                           className="text-(--primary) hover:underline">
-                                            GitHub
-                                        </a>
+                                        <span className="text-(--primary)">
+                                            GitHub:
+                                        </span>
+                                        <span className="select-all text-(--secondary) underline">
+                                            https://github.com/cbdefontenay/hugvi
+                                        </span>
                                     </div>
                                 </div>
                             </div>

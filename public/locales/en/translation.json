@@ -23,7 +23,8 @@
     "about": {
       "title": "About",
       "descriptionTitle": "Description",
-      "description": "A simple and elegant code note-taking application built with Tauri and React. Organize your code snippets, notes, and ideas in one place. Everything you create is yours and stored locally with SQLite.",
+      "description": "A simple and elegant code note-taking application built with Tauri and React. Organize your code snippets, notes, and ideas in one place. Everything you create is yours and stored locally with SQLite. So your data are private and owned only by you, because privacy is essential.",
+      "descriptionTwo": "If the UI and the functionalities of Hugvi seem simple, that is normal. The idea behind Hugvi is: \"keep it simple\", so that you do not have to be overwhelmed by a lot of features that you do not need. The app is code note-taking focused only.",
       "links": "Links"
     }
   },

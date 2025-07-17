@@ -23,7 +23,8 @@
     "about": {
       "title": "Über",
       "descriptionTitle": "Beschreibung",
-      "description": "Eine einfache und elegante Notizen-App für Code, entwickelt mit Tauri und React. Organisiere deine Code-Snippets, Notizen und Ideen an einem Ort. Alles, was du erstellst, gehört dir und wird lokal mit SQLite gespeichert.",
+      "description": "Eine einfache und elegante Anwendung zum Notieren von Code, entwickelt mit Tauri und React. Organisiere deine Code-Snippets, Notizen und Ideen an einem Ort. Alles, was du erstellst, gehört dir und wird lokal mit SQLite gespeichert. Deine Daten bleiben privat und gehören nur dir, denn Datenschutz ist essenziell.",
+      "descriptionTwo": "Wenn die Benutzeroberfläche und die Funktionen von Hugvi einfach erscheinen, ist das beabsichtigt. Die Idee hinter Hugvi ist: „Keep it simple“, damit du nicht von unnötigen Funktionen überfordert wirst. Die App konzentriert sich ausschließlich auf das Notieren von Code.",
       "links": "Links"
     }
   },
@@ -45,7 +46,7 @@
     "cancel": "Abbrechen",
     "rename": "Umbenennen",
     "deleteNoteConfirm": "Notiz löschen",
-    "deleteNoteWarning": "Sind Sie sicher, dass Sie diese Notiz löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteNoteWarning": "Bist du sicher, dass du diese Notiz löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
     "delete": "Löschen",
     "createNote": "Notiz erstellen",
     "renameFolder": "Ordner umbenennen",
@@ -53,13 +54,13 @@
     "createFolder": "Ordner erstellen",
     "folderName": "Ordnername",
     "deleteFolderConfirm": "Ordner löschen",
-    "deleteFolderWarning": "Sind Sie sicher, dass Sie diesen Ordner löschen möchten? Alle darin enthaltenen Notizen werden ebenfalls gelöscht.",
+    "deleteFolderWarning": "Bist du sicher, dass du diesen Ordner löschen möchtest? Alle darin enthaltenen Notizen werden ebenfalls gelöscht.",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen"
   },
   "editor": {
     "noNoteSelected": "Keine Notiz ausgewählt",
-    "selectNotePrompt": "Wählen Sie eine Notiz aus oder erstellen Sie eine neue",
+    "selectNotePrompt": "Wähl eine Notiz aus oder erstelle eine neue",
     "defaultNoteTitle": "Unbenannte Notiz",
     "closeNote": "Notiz schließen",
     "words": "Wörter",
@@ -70,7 +71,7 @@
     "save": "Speichern",
     "markdown": "MARKDOWN",
     "switchToPreview": "Zur Vorschau wechseln",
-    "markdownPlaceholder": "Schreiben Sie hier Ihren Markdown-Text...",
+    "markdownPlaceholder": "Schreib hier deinen Markdown-Text...",
     "switchToEditor": "Zum Editor wechseln",
     "characters": "Zeichen"
   }

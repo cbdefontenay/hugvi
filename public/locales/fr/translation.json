@@ -23,7 +23,8 @@
     "about": {
       "title": "À propos",
       "descriptionTitle": "Description",
-      "description": "Une application de prise de notes de code simple et élégante construite avec Tauri et React. Organisez vos extraits de code, notes et idées en un seul endroit. Tout ce que vous créez vous appartient et est stocké localement avec SQLite.",
+      "description": "Hugvi est une application simple et élégante de prise de notes pour le code, développée avec Tauri et React. Organisez vos extraits de code, notes et idées en un seul endroit. Tout ce que vous créez vous appartient et est stocké localement avec SQLite. Vos données sont privées et vous appartiennent totalement, car la confidentialité est essentielle.",
+      "descriptionTwo": "Si l’interface et les fonctionnalités de Hugvi vous paraissent simples, c’est normal. L’idée derrière Hugvi est : « garder les choses simples », pour que vous ne soyez pas submergé par des fonctionnalités inutiles. L’application est uniquement centrée sur la prise de notes de code.",
       "links": "Liens"
     }
   },

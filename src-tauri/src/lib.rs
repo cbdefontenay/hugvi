@@ -7,7 +7,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             Builder::default()
-                .add_migrations("sqlite:folders.db", sqlite_migrations())
+                .add_migrations("sqlite:app.db", sqlite_migrations())
                 .build(),
         )
         .run(tauri::generate_context!())

@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "hugvi",
   "version": "1.1.0",
-  "identifier": "com.cyprien.hugvi",
+  "identifier": "com.app.hugvi",
   "build": {
     "beforeDevCommand": "deno task dev",
     "devUrl": "http://localhost:1420",
@@ -35,7 +35,7 @@
   "plugins": {
     "sql": {
       "preload": [
-        "sqlite:folders.db"
+        "sqlite:folders_hugvi.db"
       ]
     }
   }

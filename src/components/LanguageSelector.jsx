@@ -28,7 +28,7 @@ const LanguageSelector = () => {
                     key={code}
                     onClick={() => handleLanguageChange(code)}
                     className={`
-            w-10 h-10 flex items-center justify-center rounded-full
+            cursor-pointer w-10 h-10 flex items-center justify-center rounded-full
             text-sm font-mono transition-all duration-200
             ${currentLanguage === code
                         ? "bg-(--primary) text-(--on-primary) shadow-md scale-105"

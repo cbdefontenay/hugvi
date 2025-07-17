@@ -116,7 +116,7 @@ export const handleCreateNoteAsync = async (
 
     try {
         const title = noteName.trim();
-        const content = `# ${title}\n\nStart writing here...`;
+        const content = "";
 
         await db.execute(
             "INSERT INTO note (title, content, date_created, folder_id) VALUES ($1, $2, datetime('now'), $3)",
