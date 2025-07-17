@@ -5,6 +5,9 @@
 A modern, desktop-only note-taking app built with [`Tauri`](https://tauri.app) and [`React`](https://react.dev), designed for developers who value simplicity, privacy, and speed.
 
 ---
+<img width="1916" height="1008" alt="image" src="https://github.com/user-attachments/assets/05138764-2bb5-4968-94c9-877de8460c0f" />
+
+---
 
 ## 🚀 What Makes Hugvi Special?
 
