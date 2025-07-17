@@ -40,7 +40,11 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const [isPreview, setIsPreview] = useState(false);
     const [wordCount, setWordCount] = useState(0);
     const [showThemeMenu, setShowThemeMenu] = useState(false);
-    const [selectedTheme, setSelectedTheme] = useState("nord");
+    const [selectedTheme, setSelectedTheme] = useState(() => {
+        const savedTheme = localStorage.getItem("syntaxTheme");
+        return THEMES.some(t => t.name === savedTheme) ? savedTheme : "nord";
+    });
+
 
     const handleKeyDown = useCallback((e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
