@@ -570,7 +570,7 @@ export default function SidePanelComponent() {
                 </div>
             </div>
 
-            <div className="flex-1 ml-72 bg-[var(--surface)]">
+            <div className="flex-1 ml-56 md:ml-72 bg-(--surface) overflow-x-hidden">
                 <EditorComponent
                     activeNote={activeNote}
                     onSaveNote={handleSaveNote}

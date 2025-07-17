@@ -270,7 +270,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         <textarea
                             value={inputText}
                             onChange={handleTextChange}
-                            className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface-container-high) text-(--on-surface)"
+                            className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface-container-high) text-(--on-surface) whitespace-pre-wrap overflow-x-hidden"
                             placeholder={t("editor.markdownPlaceholder")}
                             spellCheck="false"
                         />
