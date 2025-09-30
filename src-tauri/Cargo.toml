@@ -1,5 +1,5 @@
 [package]
-name = "hugvi"
+name = "Hugvi"
 version = "0.1.0"
 description = "A code note-taking app."
 authors = ["Cyprien"]
