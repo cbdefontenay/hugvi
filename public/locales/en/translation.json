@@ -73,6 +73,17 @@
     "switchToPreview": "Switch to preview",
     "markdownPlaceholder": "Write your markdown here...",
     "switchToEditor": "Switch to editor",
-    "characters": "characters"
+    "characters": "characters",
+    "export": "Export",
+    "exportNote": "Export Note",
+    "exportDescription": "Choose the format for exporting your note",
+    "exportMarkdown": "Markdown",
+    "exportText": "Plain Text",
+    "format": "format",
+    "exportFailed": "Export failed. Please try again."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close"
   }
 }

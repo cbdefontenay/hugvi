@@ -65,14 +65,25 @@
     "closeNote": "Fermer la note",
     "words": "mots",
     "theme": "Thème",
-    "selectTheme": "Sélectionner un thème",
+    "selectTheme": "Sélectionner le thème",
     "edit": "Éditer",
     "preview": "Aperçu",
-    "save": "Enregistrer",
+    "save": "Sauvegarder",
     "markdown": "MARKDOWN",
-    "switchToPreview": "Basculer vers l'aperçu",
+    "switchToPreview": "Passer à l'aperçu",
     "markdownPlaceholder": "Écrivez votre markdown ici...",
-    "switchToEditor": "Basculer vers l'éditeur",
-    "characters": "caractères"
+    "switchToEditor": "Passer à l'éditeur",
+    "characters": "caractères",
+    "export": "Exporter",
+    "exportNote": "Exporter la note",
+    "exportDescription": "Choisissez le format pour exporter votre note",
+    "exportMarkdown": "Markdown",
+    "exportText": "Texte brut",
+    "format": "format",
+    "exportFailed": "L'exportation a échoué. Veuillez réessayer."
+  },
+  "common": {
+    "cancel": "Annuler",
+    "close": "Fermer"
   }
 }

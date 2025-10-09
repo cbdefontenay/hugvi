@@ -1,22 +1,24 @@
-import {useState, useEffect, useCallback} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {
-    nord,
     atomDark,
     darcula,
     ghcolors,
     gruvboxDark,
     materialDark,
     materialLight,
+    nord,
     solarizedlight,
     tomorrow,
     vs,
     vscDarkPlus
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTranslation} from "react-i18next";
+import ExportPopup from "./ExportPopup.jsx";
+import {FaFileExport} from "react-icons/fa";
 
 // Available themes with display names
 const THEMES = [
@@ -40,11 +42,21 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const [isPreview, setIsPreview] = useState(false);
     const [wordCount, setWordCount] = useState(0);
     const [showThemeMenu, setShowThemeMenu] = useState(false);
+    const [showExportPopup, setShowExportPopup] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState(() => {
         const savedTheme = localStorage.getItem("syntaxTheme");
         return THEMES.some(t => t.name === savedTheme) ? savedTheme : "nord";
     });
 
+    // Add the missing handleExport function
+    const handleExport = () => {
+        console.log("Export clicked, content length:", inputText.length);
+        if (inputText.trim()) {
+            setShowExportPopup(true);
+        } else {
+            console.log("No content to export");
+        }
+    };
 
     const handleKeyDown = useCallback((e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -57,6 +69,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     }, [activeNote, isEdited, inputText, onSaveNote]);
 
     useEffect(() => {
+        console.log("EditorComponent mounted, activeNote:", activeNote);
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
@@ -100,6 +113,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     }, [selectedTheme]);
 
     useEffect(() => {
+        console.log("activeNote changed:", activeNote);
         if (activeNote) {
             setInputText(activeNote.content);
             setIsEdited(false);
@@ -136,7 +150,11 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         setShowThemeMenu(false);
     };
 
+    // Add debug logging
+    console.log("EditorComponent render - activeNote:", activeNote, "inputText length:", inputText.length);
+
     if (!activeNote) {
+        console.log("No active note, showing placeholder");
         return (
             <div className="flex items-center justify-center h-full bg-(--surface-container-low)">
                 <div className="text-center p-8 max-w-md">
@@ -160,6 +178,8 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
             </div>
         );
     }
+
+    console.log("Rendering editor with active note:", activeNote.title);
 
     return (
         <div className="h-full flex flex-col bg-(--surface-container-low)">
@@ -186,6 +206,15 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <span className="text-sm text-(--on-surface-variant)">
                         {wordCount} {t("editor.words")}
                     </span>
+
+                    <button
+                        onClick={handleExport}
+                        disabled={!inputText.trim()}
+                        className={`cursor-pointer flex items-center space-x-2 px-3 py-2 rounded-lg text-sm ${inputText.trim() ? 'bg-(--tertiary) text-(--on-tertiary) hover:bg-(--tertiary-container) hover:text-(--on-tertiary-container)' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
+                    >
+                        <FaFileExport className="text-(--background) hover:text-(--on-background)" size={15}/>
+                        <span>{t("editor.export")}</span>
+                    </button>
 
                     {/* Theme Selector */}
                     <div className="relative">
@@ -330,12 +359,12 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                         className="text-2xl font-bold mt-6 mb-4 text-(--on-surface)" {...props} />,
                                     h2: ({node, ...props}) => <h2
                                         className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
-                                    h3: ({node, ...props}) => <h2
-                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
-                                    h4: ({node, ...props}) => <h2
-                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
-                                    h5: ({node, ...props}) => <h2
-                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
+                                    h3: ({node, ...props}) => <h3
+                                        className="text-lg font-bold mt-4 mb-2 text-(--on-surface)" {...props} />,
+                                    h4: ({node, ...props}) => <h4
+                                        className="text-base font-bold mt-3 mb-2 text-(--on-surface)" {...props} />,
+                                    h5: ({node, ...props}) => <h5
+                                        className="text-sm font-bold mt-2 mb-1 text-(--on-surface)" {...props} />,
                                     p: ({node, ...props}) => <p className="my-3 text-(--on-surface)" {...props} />,
                                     a: ({node, ...props}) => <a
                                         className="text-(--primary) hover:underline" {...props} />,
@@ -398,6 +427,11 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <span>{inputText.length} {t("editor.characters")}</span>
                 </div>
             </div>
+            <ExportPopup
+                isOpen={showExportPopup}
+                onClose={() => setShowExportPopup(false)}
+                content={inputText}
+            />
         </div>
     );
 }

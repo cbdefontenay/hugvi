@@ -60,7 +60,7 @@
   },
   "editor": {
     "noNoteSelected": "Keine Notiz ausgewählt",
-    "selectNotePrompt": "Wähl eine Notiz aus oder erstelle eine neue",
+    "selectNotePrompt": "Wählen Sie eine Notiz aus oder erstellen Sie eine neue",
     "defaultNoteTitle": "Unbenannte Notiz",
     "closeNote": "Notiz schließen",
     "words": "Wörter",
@@ -71,8 +71,19 @@
     "save": "Speichern",
     "markdown": "MARKDOWN",
     "switchToPreview": "Zur Vorschau wechseln",
-    "markdownPlaceholder": "Schreib hier deinen Markdown-Text...",
+    "markdownPlaceholder": "Schreiben Sie hier Ihr Markdown...",
     "switchToEditor": "Zum Editor wechseln",
-    "characters": "Zeichen"
+    "characters": "Zeichen",
+    "export": "Exportieren",
+    "exportNote": "Notiz exportieren",
+    "exportDescription": "Wählen Sie das Format für den Export Ihrer Notiz",
+    "exportMarkdown": "Markdown",
+    "exportText": "Nur Text",
+    "format": "Format",
+    "exportFailed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "close": "Schließen"
   }
 }

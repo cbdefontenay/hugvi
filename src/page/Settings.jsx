@@ -23,7 +23,7 @@ export default function Settings() {
             </div>
 
             <div className="flex flex-1 overflow-hidden">
-                <div className="w-48 border-r border-(--outline-variant) p-4">
+                <div className="w-54 border-r border-(--outline-variant) p-4">
                     <div className="space-y-1">
                         <button
                             onClick={() => setActiveTab("appearance")}
@@ -93,15 +93,6 @@ export default function Settings() {
                             <h2 className="text-xl font-semibold">{t("settings.keyboard.title")}</h2>
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <h3 className="font-medium">{t("settings.keyboard.newFolder")}</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">N</kbd>
-                                        </div>
-                                    </div>
                                     <div>
                                         <h3 className="font-medium">{t("settings.keyboard.saveNote")}</h3>
                                         <div className="flex items-center gap-1 mt-1">
