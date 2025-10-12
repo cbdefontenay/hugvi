@@ -291,7 +291,7 @@ export default function SidePanelComponent() {
                         onClick={() => setIsFolderModalOpen(true)}
                         className="cursor-pointer w-60 m-4 bg-(--primary-container) text-(--on-primary-container) hover:bg-(--primary) hover:text-(--on-primary) font-medium px-4 py-2 rounded-lg transition-colors"
                     >
-                        <span className="flex flex-rom items-center justify-evenly gap-6">
+                        <span className="flex flex-rom items-center justify-start gap-4">
                             <FaRegFolder size={16} className=""/> {t("panel.addFolder")}
                         </span>
                     </button>
