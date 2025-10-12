@@ -64,7 +64,7 @@
     "defaultNoteTitle": "Unbenannte Notiz",
     "closeNote": "Notiz schließen",
     "words": "Wörter",
-    "theme": "Thema",
+    "theme": "Modi",
     "selectTheme": "Thema auswählen",
     "edit": "Bearbeiten",
     "preview": "Vorschau",
@@ -80,7 +80,10 @@
     "exportMarkdown": "Markdown",
     "exportText": "Nur Text",
     "format": "Format",
-    "exportFailed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut."
+    "exportFailed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "split": "Geteilt",
+    "mode": "Modus",
+    "switchToSplit": "Zu geteilter Ansicht wechseln"
   },
   "common": {
     "cancel": "Abbrechen",

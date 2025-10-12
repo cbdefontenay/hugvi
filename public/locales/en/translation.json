@@ -80,7 +80,10 @@
     "exportMarkdown": "Markdown",
     "exportText": "Plain Text",
     "format": "format",
-    "exportFailed": "Export failed. Please try again."
+    "exportFailed": "Export failed. Please try again.",
+    "split": "Split",
+    "mode": "Mode",
+    "switchToSplit": "Switch to split view"
   },
   "common": {
     "cancel": "Cancel",

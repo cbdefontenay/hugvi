@@ -80,7 +80,10 @@
     "exportMarkdown": "Markdown",
     "exportText": "Texte brut",
     "format": "format",
-    "exportFailed": "L'exportation a échoué. Veuillez réessayer."
+    "exportFailed": "L'exportation a échoué. Veuillez réessayer.",
+    "split": "Partagé",
+    "mode": "Mode",
+    "switchToSplit": "Passer en vue partagée"
   },
   "common": {
     "cancel": "Annuler",

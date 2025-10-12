@@ -13,32 +13,48 @@ import {
     nord,
     solarizedlight,
     tomorrow,
-    vs,
     vscDarkPlus
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTranslation} from "react-i18next";
 import ExportPopup from "./ExportPopup.jsx";
-import {FaFileExport} from "react-icons/fa";
+import {FaFileExport, FaEdit, FaEye, FaColumns, FaSave, FaTimes, FaPalette} from "react-icons/fa";
 
 const THEMES = [
     {name: "nord", display: "Nord"},
     {name: "atomDark", display: "Atom Dark"},
     {name: "darcula", display: "Darcula"},
-    {name: "ghcolors", display: "GitHub"},
     {name: "gruvboxDark", display: "Gruvbox Dark"},
     {name: "materialDark", display: "Material Dark"},
     {name: "materialLight", display: "Material Light"},
     {name: "solarizedlight", display: "Solarized Light"},
     {name: "tomorrow", display: "Tomorrow"},
-    {name: "vs", display: "VS"},
     {name: "vscDarkPlus", display: "VS Code Dark+"}
 ];
+
+// View modes
+const VIEW_MODES = {
+    EDIT: 'edit',
+    PREVIEW: 'preview',
+    SPLIT: 'split'
+};
+
+// Create a direct mapping object for themes
+const THEME_MAP = {
+    nord: nord,
+    atomDark: atomDark,
+    darcula: darcula,
+    gruvboxDark: gruvboxDark,
+    materialDark: materialDark,
+    materialLight: materialLight,
+    solarizedlight: solarizedlight,
+    tomorrow: tomorrow,
+    vscDarkPlus: vscDarkPlus
+};
 
 export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const {t} = useTranslation();
     const [inputText, setInputText] = useState("");
     const [isEdited, setIsEdited] = useState(false);
-    const [isPreview, setIsPreview] = useState(false);
     const [wordCount, setWordCount] = useState(0);
     const [showThemeMenu, setShowThemeMenu] = useState(false);
     const [showExportPopup, setShowExportPopup] = useState(false);
@@ -46,6 +62,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         const savedTheme = localStorage.getItem("syntaxTheme");
         return THEMES.some(t => t.name === savedTheme) ? savedTheme : "nord";
     });
+    const [viewMode, setViewMode] = useState(VIEW_MODES.EDIT);
 
     // Add the missing handleExport function
     const handleExport = () => {
@@ -73,31 +90,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    // Fixed getThemeStyle function using the mapping object
     const getThemeStyle = (themeName) => {
-        switch (themeName) {
-            case "atomDark":
-                return atomDark;
-            case "darcula":
-                return darcula;
-            case "ghcolors":
-                return ghcolors;
-            case "gruvboxDark":
-                return gruvboxDark;
-            case "materialDark":
-                return materialDark;
-            case "materialLight":
-                return materialLight;
-            case "solarizedlight":
-                return solarizedlight;
-            case "tomorrow":
-                return tomorrow;
-            case "vs":
-                return vs;
-            case "vscDarkPlus":
-                return vscDarkPlus;
-            default:
-                return nord;
-        }
+        return THEME_MAP[themeName] || nord; // Fallback to nord if theme not found
     };
 
     useEffect(() => {
@@ -142,11 +137,14 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         }
     };
 
-    const toggleView = () => setIsPreview(!isPreview);
     const toggleThemeMenu = () => setShowThemeMenu(!showThemeMenu);
     const selectTheme = (themeName) => {
         setSelectedTheme(themeName);
         setShowThemeMenu(false);
+    };
+
+    const setViewModeHandler = (mode) => {
+        setViewMode(mode);
     };
 
     // Add debug logging
@@ -191,10 +189,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         className="cursor-pointer p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
                         aria-label={t("editor.closeNote")}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M19 12H5M12 19l-7-7 7-7"/>
-                        </svg>
+                        <FaTimes size={16} />
                     </button>
                     <h1 className="text-lg font-semibold text-(--on-surface) truncate max-w-xs md:max-w-md">
                         {activeNote.title || t("editor.defaultNoteTitle")}
@@ -209,9 +204,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <button
                         onClick={handleExport}
                         disabled={!inputText.trim()}
-                        className={`cursor-pointer flex items-center space-x-2 px-3 py-2 rounded-lg text-sm ${inputText.trim() ? 'bg-(--tertiary) text-(--on-tertiary) hover:bg-(--tertiary-container) hover:text-(--on-tertiary-container)' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
+                        className={`cursor-pointer flex items-center space-x-2 px-3 py-1 rounded-lg text-sm ${inputText.trim() ? 'bg-(--surface-variant) text-(--on-surface-variant) hover:bg-(--surface) hover:text-(--on-surface)' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
                     >
-                        <FaFileExport className="text-(--background) hover:text-(--on-background)" size={15}/>
+                        <FaFileExport size={15}/>
                         <span>{t("editor.export")}</span>
                     </button>
 
@@ -222,12 +217,8 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                             className="cursor-pointer flex items-center space-x-1 px-3 py-1 rounded-md text-sm bg-(--surface-container-high) text-(--on-surface-variant) hover:bg-(--surface-container)"
                             aria-label={t("editor.selectTheme")}
                         >
+                            <FaPalette size={14} />
                             <span>{t("editor.theme")}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M6 9l6 6 6-6"/>
-                            </svg>
                         </button>
 
                         {showThemeMenu && (
@@ -248,52 +239,65 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         )}
                     </div>
 
+                    {/* View Mode Selector */}
                     <div className="flex bg-(--surface-container-high) rounded-lg p-1">
                         <button
-                            onClick={() => setIsPreview(false)}
-                            className={`cursor-pointer px-3 py-1 rounded-md text-sm ${!isPreview ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
+                            onClick={() => setViewModeHandler(VIEW_MODES.EDIT)}
+                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.EDIT ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
+                            title={t("editor.edit")}
                         >
-                            {t("editor.edit")}
+                            <FaEdit size={12} />
+                            <span>{t("editor.edit")}</span>
                         </button>
                         <button
-                            onClick={() => setIsPreview(true)}
-                            className={`cursor-pointer px-3 py-1 rounded-md text-sm ${isPreview ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
+                            onClick={() => setViewModeHandler(VIEW_MODES.SPLIT)}
+                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.SPLIT ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
+                            title={t("editor.split")}
                         >
-                            {t("editor.preview")}
+                            <FaColumns size={12} />
+                            <span>{t("editor.split")}</span>
+                        </button>
+                        <button
+                            onClick={() => setViewModeHandler(VIEW_MODES.PREVIEW)}
+                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.PREVIEW ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
+                            title={t("editor.preview")}
+                        >
+                            <FaEye size={12} />
+                            <span>{t("editor.preview")}</span>
                         </button>
                     </div>
+
                     <button
                         onClick={handleSave}
                         disabled={!isEdited}
-                        className={`px-4 py-2 rounded-lg text-sm ${isEdited ? 'bg-(--primary) text-(--on-primary) hover:bg-(--primary-container) hover:text-(--on-primary-container) cursor-pointer' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
+                        className={`px-4 py-2 rounded-lg text-sm flex items-center space-x-1 ${isEdited ? 'bg-(--primary) text-(--on-primary) hover:bg-(--primary-container) hover:text-(--on-primary-container) cursor-pointer' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
                     >
-                        {t("editor.save")}
+                        <FaSave size={14} />
+                        <span>{t("editor.save")}</span>
                     </button>
                 </div>
             </header>
 
             {/* Editor/Preview Area */}
-            <div className="select-text flex-1 overflow-hidden flex flex-col md:flex-row">
-                {/* Editor Panel */}
-                {!isPreview && (
-                    <div className="flex-1 h-full flex flex-col border-r border-(--outline-variant)">
+            <div className="select-text flex-1 overflow-hidden flex">
+                {/* Editor Panel - Show in edit mode or split mode */}
+                {(viewMode === VIEW_MODES.EDIT || viewMode === VIEW_MODES.SPLIT) && (
+                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1' : 'flex-1'} h-full flex flex-col border-r border-(--outline-variant)`}>
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
                                 {t("editor.markdown")}
                             </span>
-                            <button
-                                onClick={toggleView}
-                                className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
-                                aria-label={t("editor.switchToPreview")}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                                </svg>
-                            </button>
+                            {viewMode === VIEW_MODES.EDIT && (
+                                <button
+                                    onClick={() => setViewModeHandler(VIEW_MODES.SPLIT)}
+                                    className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
+                                    aria-label={t("editor.switchToSplit")}
+                                    title={t("editor.switchToSplit")}
+                                >
+                                    <FaColumns size={14} />
+                                </button>
+                            )}
                         </div>
                         <textarea
                             value={inputText}
@@ -305,25 +309,24 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     </div>
                 )}
 
-                {/* Preview Panel */}
-                {isPreview && (
-                    <div className="flex-1 h-full flex flex-col overflow-hidden">
+                {/* Preview Panel - Show in preview mode or split mode */}
+                {(viewMode === VIEW_MODES.PREVIEW || viewMode === VIEW_MODES.SPLIT) && (
+                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1' : 'flex-1'} h-full flex flex-col overflow-hidden`}>
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
                                 {t("editor.preview")}
                             </span>
-                            <button
-                                onClick={toggleView}
-                                className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
-                                aria-label={t("editor.switchToEditor")}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                </svg>
-                            </button>
+                            {viewMode === VIEW_MODES.PREVIEW && (
+                                <button
+                                    onClick={() => setViewModeHandler(VIEW_MODES.SPLIT)}
+                                    className="p-1 rounded hover:bg-(--surface-container) text-(--on-surface-variant)"
+                                    aria-label={t("editor.switchToSplit")}
+                                    title={t("editor.switchToSplit")}
+                                >
+                                    <FaColumns size={14} />
+                                </button>
+                            )}
                         </div>
                         <div
                             className="flex-1 overflow-y-auto p-6 prose prose-sm max-w-none bg-(--surface-container-high) dark:prose-invert">
@@ -424,6 +427,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <span>{new Date().toLocaleDateString()}</span>
                     <span>{wordCount} {t("editor.words")}</span>
                     <span>{inputText.length} {t("editor.characters")}</span>
+                    <span className="capitalize">{viewMode} {t("editor.mode")}</span>
                 </div>
             </div>
             <ExportPopup
