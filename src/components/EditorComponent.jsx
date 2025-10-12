@@ -20,7 +20,6 @@ import {useTranslation} from "react-i18next";
 import ExportPopup from "./ExportPopup.jsx";
 import {FaFileExport} from "react-icons/fa";
 
-// Available themes with display names
 const THEMES = [
     {name: "nord", display: "Nord"},
     {name: "atomDark", display: "Atom Dark"},

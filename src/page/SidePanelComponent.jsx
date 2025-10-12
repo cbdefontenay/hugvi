@@ -10,6 +10,7 @@ import {
 } from "../helpers/DbHelpers.js";
 import EditorComponent from "../components/EditorComponent.jsx";
 import {useTranslation} from "react-i18next";
+import {FaRegFolder} from "react-icons/fa";
 
 export default function SidePanelComponent() {
     const {t} = useTranslation();
@@ -141,7 +142,6 @@ export default function SidePanelComponent() {
                     setActiveNote
                 );
             } catch (e) {
-                console.error("Failed to delete folder:", e);
                 alert("Failed to delete folder");
             }
         }
@@ -165,7 +165,6 @@ export default function SidePanelComponent() {
             setNewNoteTitle("");
             setNoteToModify(null);
         } catch (e) {
-            console.error("Failed to rename note:", e);
             setError("Failed to rename note");
         }
     };
@@ -185,7 +184,6 @@ export default function SidePanelComponent() {
             setIsDeleteNoteConfirmOpen(false);
             setNoteToModify(null);
         } catch (e) {
-            console.error("Failed to delete note:", e);
             setError("Failed to delete note");
         }
     };
@@ -288,11 +286,14 @@ export default function SidePanelComponent() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto overflow-x-hidden">
+
                     <button
                         onClick={() => setIsFolderModalOpen(true)}
-                        className="cursor-pointer w-60 m-4 bg-(--primary) text-(--on-primary) font-medium px-4 py-2 rounded-lg hover:bg-(--primary-container) hover:text-(--on-primary-container) transition-colors"
+                        className="cursor-pointer w-60 m-4 bg-(--primary-container) text-(--on-primary-container) hover:bg-(--primary) hover:text-(--on-primary) font-medium px-4 py-2 rounded-lg transition-colors"
                     >
-                        {t("panel.addFolder")}
+                        <span className="flex flex-rom items-center justify-evenly gap-6">
+                            <FaRegFolder size={16} className=""/> {t("panel.addFolder")}
+                        </span>
                     </button>
 
                     <div className="px-2 space-y-1 relative">
