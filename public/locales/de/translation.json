@@ -64,7 +64,7 @@
     "defaultNoteTitle": "Unbenannte Notiz",
     "closeNote": "Notiz schließen",
     "words": "Wörter",
-    "theme": "Modi",
+    "theme": "Thema",
     "selectTheme": "Thema auswählen",
     "edit": "Bearbeiten",
     "preview": "Vorschau",
@@ -83,7 +83,11 @@
     "exportFailed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "split": "Geteilt",
     "mode": "Modus",
-    "switchToSplit": "Zu geteilter Ansicht wechseln"
+    "switchToSplit": "Zur geteilten Ansicht wechseln",
+    "copyCode": "Code kopieren",
+    "enterFullscreen": "Vollbildmodus starten",
+    "exitFullscreen": "Vollbildmodus beenden",
+    "fullscreen": "Vollbild"
   },
   "common": {
     "cancel": "Abbrechen",

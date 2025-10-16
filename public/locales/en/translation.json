@@ -83,7 +83,11 @@
     "exportFailed": "Export failed. Please try again.",
     "split": "Split",
     "mode": "Mode",
-    "switchToSplit": "Switch to split view"
+    "switchToSplit": "Switch to split view",
+    "copyCode": "Copy code",
+    "enterFullscreen": "Enter fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "fullscreen": "Fullscreen"
   },
   "common": {
     "cancel": "Cancel",

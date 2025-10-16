@@ -2,34 +2,11 @@ import {useCallback, useEffect, useState} from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
-import {
-    atomDark,
-    darcula,
-    ghcolors,
-    gruvboxDark,
-    materialDark,
-    materialLight,
-    nord,
-    solarizedlight,
-    tomorrow,
-    vscDarkPlus
-} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTranslation} from "react-i18next";
 import ExportPopup from "./ExportPopup.jsx";
-import {FaFileExport, FaEdit, FaEye, FaColumns, FaSave, FaTimes, FaPalette} from "react-icons/fa";
-
-const THEMES = [
-    {name: "nord", display: "Nord"},
-    {name: "atomDark", display: "Atom Dark"},
-    {name: "darcula", display: "Darcula"},
-    {name: "gruvboxDark", display: "Gruvbox Dark"},
-    {name: "materialDark", display: "Material Dark"},
-    {name: "materialLight", display: "Material Light"},
-    {name: "solarizedlight", display: "Solarized Light"},
-    {name: "tomorrow", display: "Tomorrow"},
-    {name: "vscDarkPlus", display: "VS Code Dark+"}
-];
+import {FaFileExport, FaEdit, FaEye, FaColumns, FaSave, FaTimes, FaExpand, FaCompress} from "react-icons/fa";
+import SyntaxHighlighterComponent from "./SyntaxHighlighterComponent.jsx";
+import ThemeSelector, {THEMES} from "./ThemeSelector.jsx";
 
 // View modes
 const VIEW_MODES = {
@@ -38,33 +15,19 @@ const VIEW_MODES = {
     SPLIT: 'split'
 };
 
-// Create a direct mapping object for themes
-const THEME_MAP = {
-    nord: nord,
-    atomDark: atomDark,
-    darcula: darcula,
-    gruvboxDark: gruvboxDark,
-    materialDark: materialDark,
-    materialLight: materialLight,
-    solarizedlight: solarizedlight,
-    tomorrow: tomorrow,
-    vscDarkPlus: vscDarkPlus
-};
-
 export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     const {t} = useTranslation();
     const [inputText, setInputText] = useState("");
     const [isEdited, setIsEdited] = useState(false);
     const [wordCount, setWordCount] = useState(0);
-    const [showThemeMenu, setShowThemeMenu] = useState(false);
     const [showExportPopup, setShowExportPopup] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState(() => {
         const savedTheme = localStorage.getItem("syntaxTheme");
         return THEMES.some(t => t.name === savedTheme) ? savedTheme : "nord";
     });
     const [viewMode, setViewMode] = useState(VIEW_MODES.EDIT);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
-    // Add the missing handleExport function
     const handleExport = () => {
         console.log("Export clicked, content length:", inputText.length);
         if (inputText.trim()) {
@@ -82,18 +45,60 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                 setIsEdited(false);
             }
         }
+        // Add F11 or Escape for fullscreen (optional)
+        if (e.key === 'F11') {
+            e.preventDefault();
+            toggleFullscreen();
+        }
     }, [activeNote, isEdited, inputText, onSaveNote]);
+
+    const toggleFullscreen = () => {
+        if (!isFullscreen) {
+            // Enter fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+            setIsFullscreen(true);
+        } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            setIsFullscreen(false);
+        }
+    };
+
+    // Handle fullscreen change events
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     useEffect(() => {
         console.log("EditorComponent mounted, activeNote:", activeNote);
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
-
-    // Fixed getThemeStyle function using the mapping object
-    const getThemeStyle = (themeName) => {
-        return THEME_MAP[themeName] || nord; // Fallback to nord if theme not found
-    };
 
     useEffect(() => {
         const savedTheme = localStorage.getItem("syntaxTheme");
@@ -137,12 +142,6 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         }
     };
 
-    const toggleThemeMenu = () => setShowThemeMenu(!showThemeMenu);
-    const selectTheme = (themeName) => {
-        setSelectedTheme(themeName);
-        setShowThemeMenu(false);
-    };
-
     const setViewModeHandler = (mode) => {
         setViewMode(mode);
     };
@@ -179,7 +178,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     console.log("Rendering editor with active note:", activeNote.title);
 
     return (
-        <div className="h-full flex flex-col bg-(--surface-container-low)">
+        <div className={`h-full flex flex-col bg-(--surface-container-low) ${isFullscreen ? 'fixed inset-0 z-50' : ''}`}>
             {/* Header Bar */}
             <header
                 className="flex items-center justify-between p-4 border-b border-(--outline-variant) bg-(--surface)">
@@ -210,34 +209,21 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                         <span>{t("editor.export")}</span>
                     </button>
 
-                    {/* Theme Selector */}
-                    <div className="relative">
-                        <button
-                            onClick={toggleThemeMenu}
-                            className="cursor-pointer flex items-center space-x-1 px-3 py-1 rounded-md text-sm bg-(--surface-container-high) text-(--on-surface-variant) hover:bg-(--surface-container)"
-                            aria-label={t("editor.selectTheme")}
-                        >
-                            <FaPalette size={14} />
-                            <span>{t("editor.theme")}</span>
-                        </button>
+                    {/* Fullscreen Toggle */}
+                    <button
+                        onClick={toggleFullscreen}
+                        className="cursor-pointer p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
+                        aria-label={isFullscreen ? t("editor.exitFullscreen") : t("editor.enterFullscreen")}
+                        title={isFullscreen ? t("editor.exitFullscreen") : t("editor.enterFullscreen")}
+                    >
+                        {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
+                    </button>
 
-                        {showThemeMenu && (
-                            <div
-                                className="absolute right-0 mt-1 w-48 bg-(--surface) rounded-md shadow-lg z-50 border border-(--outline-variant)">
-                                <div className="py-1 max-h-60 overflow-y-auto">
-                                    {THEMES.map((theme) => (
-                                        <button
-                                            key={theme.name}
-                                            onClick={() => selectTheme(theme.name)}
-                                            className={`cursor-pointer block w-full text-left px-4 py-2 text-sm ${selectedTheme === theme.name ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface) hover:bg-(--surface-container-high)'}`}
-                                        >
-                                            {theme.display}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    {/* Theme Selector */}
+                    <ThemeSelector
+                        selectedTheme={selectedTheme}
+                        onThemeChange={setSelectedTheme}
+                    />
 
                     {/* View Mode Selector */}
                     <div className="flex bg-(--surface-container-high) rounded-lg p-1">
@@ -328,82 +314,98 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                 </button>
                             )}
                         </div>
-                        <div
-                            className="flex-1 overflow-y-auto p-6 prose prose-sm max-w-none bg-(--surface-container-high) dark:prose-invert">
+
+                        <div className="flex-1 overflow-y-auto p-6 bg-(--surface-container-high)">
                             <Markdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
                                 components={{
                                     code({node, inline, className, children, ...props}) {
                                         const match = /language-(\w+)/.exec(className || "");
-                                        return !inline && match ? (
-                                            <SyntaxHighlighter
-                                                style={getThemeStyle(selectedTheme)}
-                                                language={match[1]}
-                                                PreTag="div"
-                                                showLineNumbers={false}
-                                                wrapLines
-                                                {...props}
-                                                className="rounded-md text-sm bg-(--surface-container-high)"
-                                            >
-                                                {String(children).replace(/\n$/, "")}
-                                            </SyntaxHighlighter>
-                                        ) : (
+                                        const codeText = String(children).replace(/\n$/, '');
+
+                                        if (!inline && match) {
+                                            return (
+                                                <SyntaxHighlighterComponent
+                                                    language={match[1]}
+                                                    theme={selectedTheme}
+                                                    {...props}
+                                                >
+                                                    {codeText}
+                                                </SyntaxHighlighterComponent>
+                                            );
+                                        }
+
+                                        return (
                                             <code
-                                                className={`${className} px-1.5 py-0.5 rounded text-sm bg-(--surface-container-high)`}
+                                                className="bg-(--surface-container-high) text-(--on-surface-container-high) px-1.5 py-0.5 rounded text-sm font-mono border border-(--outline)/30 break-words max-w-full"
                                                 {...props}
                                             >
                                                 {children}
                                             </code>
                                         );
                                     },
-                                    h1: ({node, ...props}) => <h1
-                                        className="text-2xl font-bold mt-6 mb-4 text-(--on-surface)" {...props} />,
-                                    h2: ({node, ...props}) => <h2
-                                        className="text-xl font-bold mt-5 mb-3 text-(--on-surface)" {...props} />,
-                                    h3: ({node, ...props}) => <h3
-                                        className="text-lg font-bold mt-4 mb-2 text-(--on-surface)" {...props} />,
-                                    h4: ({node, ...props}) => <h4
-                                        className="text-base font-bold mt-3 mb-2 text-(--on-surface)" {...props} />,
-                                    h5: ({node, ...props}) => <h5
-                                        className="text-sm font-bold mt-2 mb-1 text-(--on-surface)" {...props} />,
-                                    p: ({node, ...props}) => <p className="my-3 text-(--on-surface)" {...props} />,
-                                    a: ({node, ...props}) => <a
-                                        className="text-(--primary) hover:underline" {...props} />,
-                                    blockquote: ({node, ...props}) => <blockquote
-                                        className="border-l-4 border-(--primary) pl-4 italic text-(--on-surface-variant)" {...props} />,
-                                    ul: ({node, ...props}) => <ul
-                                        className="my-3 pl-6 list-disc text-(--on-surface)" {...props} />,
-                                    ol: ({node, ...props}) => <ol
-                                        className="my-3 pl-6 list-decimal text-(--on-surface)" {...props} />,
-                                    li: ({node, className, children, ...props}) => {
-                                        const isTaskItem = className?.includes('task-list-item');
-                                        return (
-                                            <li
-                                                className={`text-(--on-surface) my-1 ${isTaskItem ? 'flex items-start' : ''} ${className || ''}`}
-                                                {...props}
-                                            >
-                                                {children}
-                                            </li>
-                                        );
+
+                                    // ... (keep all your other Markdown components as before)
+                                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-(--on-surface) pb-2 mb-3 mt-4" {...props} />,
+                                    h2: ({node, ...props}) => <h2 className="text-xl font-bold text-(--on-surface) pb-1 mb-2 mt-3" {...props} />,
+                                    h3: ({node, ...props}) => <h3 className="text-lg font-bold text-(--on-surface) mb-1 mt-2" {...props} />,
+                                    h4: ({node, ...props}) => <h4 className="text-base font-bold text-(--on-surface) mb-1 mt-2" {...props} />,
+                                    p: ({node, ...props}) => <p className="text-(--on-surface) leading-relaxed mb-3 text-sm" {...props} />,
+                                    a: ({node, ...props}) => <a className="text-(--primary) hover:text-(--secondary) transition-colors duration-200 font-medium underline text-sm" {...props} />,
+                                    blockquote: ({node, ...props}) => <blockquote className="border-l-3 border-(--primary) pl-3 py-1 my-3 bg-(--surface-container) text-(--on-surface-container) not-italic rounded-r text-sm" {...props} />,
+                                    ul: ({node, ...props}) => <ul className="text-(--on-surface) leading-6 mb-3 list-disc list-inside text-sm" {...props} />,
+                                    ol: ({node, ...props}) => <ol className="text-(--on-surface) leading-6 mb-3 list-decimal list-inside text-sm" {...props} />,
+                                    li: ({node, children, ...props}) => {
+                                        const taskListItem = node?.children?.[0]?.type === 'input';
+
+                                        if (taskListItem) {
+                                            return (
+                                                <li className="flex items-start gap-2 list-none ml-0 my-1" {...props}>
+                                                    {children}
+                                                </li>
+                                            );
+                                        }
+
+                                        return <li className="text-(--on-surface) marker:text-(--primary) my-1" {...props}>{children}</li>;
                                     },
-                                    input: ({node, className, checked, ...props}) => {
-                                        if (props.type === 'checkbox') {
+                                    input: ({node, checked, ...props}) => {
+                                        if (props.type === "checkbox") {
                                             return (
                                                 <input
                                                     type="checkbox"
-                                                    className={`h-4 w-4 mt-1 mr-2 rounded text-(--primary) border-(--outline) focus:ring-(--primary) ${className || ''}`}
                                                     checked={checked}
+                                                    readOnly
+                                                    className={`w-3.5 h-3.5 rounded border-2 mt-0.5 flex-shrink-0 transition-all duration-200
+                                                        ${checked
+                                                        ? "bg-(--primary) border-(--primary) text-(--on-primary)"
+                                                        : "bg-(--surface) border-(--outline) hover:border-(--primary)"}
+                                                    `}
                                                     {...props}
                                                 />
                                             );
                                         }
                                         return <input {...props} />;
                                     },
-                                    del: ({node, ...props}) => <del className="text-(--on-surface)" {...props} />,
-                                    em: ({node, ...props}) => <em className="italic text-(--on-surface)" {...props} />,
-                                    strong: ({node, ...props}) => <strong
-                                        className="font-semibold text-(--on-surface)" {...props} />,
+                                    strong: ({node, ...props}) => <strong className="text-(--primary) font-bold" {...props} />,
+                                    em: ({node, ...props}) => <em className="text-(--secondary) italic" {...props} />,
+                                    table: ({node, ...props}) => (
+                                        <div className="overflow-x-auto my-3 border border-(--outline) rounded text-xs">
+                                            <table className="w-full border-collapse" {...props} />
+                                        </div>
+                                    ),
+                                    th: ({node, ...props}) => (
+                                        <th className="bg-(--surface-container-high) text-(--on-surface-container-high) px-3 py-2 border-b border-(--outline) font-semibold text-left text-xs" {...props} />
+                                    ),
+                                    td: ({node, ...props}) => (
+                                        <td className="px-3 py-2 border-b border-(--outline) text-(--on-surface) text-xs" {...props} />
+                                    ),
+                                    hr: ({node, ...props}) => (
+                                        <hr className="my-4 border-t border-(--outline) opacity-30" {...props} />
+                                    ),
+                                    img: ({node, ...props}) => (
+                                        <img className="rounded border border-(--outline) max-w-full h-auto my-3" {...props} />
+                                    ),
                                 }}
                             >
                                 {inputText}
@@ -428,6 +430,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                     <span>{wordCount} {t("editor.words")}</span>
                     <span>{inputText.length} {t("editor.characters")}</span>
                     <span className="capitalize">{viewMode} {t("editor.mode")}</span>
+                    {isFullscreen && (
+                        <span className="text-(--primary) font-medium">{t("editor.fullscreen")}</span>
+                    )}
                 </div>
             </div>
             <ExportPopup
