@@ -4,6 +4,9 @@
 
 A modern, desktop-only note-taking app built with [`Tauri`](https://tauri.app) and [`React`](https://react.dev), designed for developers who value simplicity, privacy, and speed.
 
+[![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/hugvi)
+[![Microsoft Store](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9nwg8bt6590c?hl=en-gb&gl=US)
+
 ---
 <img width="1916" height="1008" alt="image" src="https://github.com/user-attachments/assets/05138764-2bb5-4968-94c9-877de8460c0f" />
 
