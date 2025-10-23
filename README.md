@@ -9,6 +9,7 @@ A modern, desktop-only note-taking app built with [`Tauri`](https://tauri.app) a
 
 ---
 <img width="1916" height="990" alt="image" src="https://github.com/user-attachments/assets/1284dee7-a113-4323-9c65-b564891752ba" />
+
 ---
 
 ## 🚀 What Makes Hugvi Special?
@@ -17,16 +18,16 @@ A modern, desktop-only note-taking app built with [`Tauri`](https://tauri.app) a
 
 ### ✅ Features
 
-1. 💾 **Local-First with SQLite**  
+1.  **Local-First with SQLite**  
    All your data is stored locally using SQLite — your notes are private and truly yours.
 
-2. 🧠 **Minimal UI, Maximum Focus**  
+2.  **Minimal UI, Maximum Focus**  
    Hugvi follows a _“keep it simple”_ philosophy. No unnecessary features — just what you need to stay productive.
 
-3. 🌍 **Multilingual Support**  
+3.  **Multilingual Support**  
    Available in **English**, **German**, and **French**.
 
-4. 🌓 **Dark & Light Mode**  
+4.  **Dark & Light Mode**  
    Seamlessly switch between dark and light themes to match your environment.
 
 ---
