@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@tailwindcss/oxide": "4.1.11",
     "@tailwindcss/vite": "^4.1.11",
     "@tauri-apps/plugin-dialog": "~2.4.0",
     "@tauri-apps/plugin-sql": "~2.3.0",

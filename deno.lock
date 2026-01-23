@@ -1,10 +1,11 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@tailwindcss/oxide@4.1.11": "4.1.11",
     "npm:@tailwindcss/postcss@4": "4.1.11",
     "npm:@tailwindcss/typography@~0.5.16": "0.5.16_tailwindcss@4.1.11",
     "npm:@tailwindcss/vite@^4.1.11": "4.1.11_vite@6.3.5__picomatch@4.0.2",
-    "npm:@tauri-apps/api@2": "2.6.0",
+    "npm:@tauri-apps/api@2": "2.8.0",
     "npm:@tauri-apps/cli@2": "2.6.2",
     "npm:@tauri-apps/plugin-dialog@2.4": "2.4.0",
     "npm:@tauri-apps/plugin-opener@2": "2.2.7",
@@ -587,9 +588,6 @@
         "vite"
       ]
     },
-    "@tauri-apps/api@2.6.0": {
-      "integrity": "sha512-hRNcdercfgpzgFrMXWwNDBN0B7vNzOzRepy6ZAmhxi5mDLVPNrTpo9MGg2tN/F7JRugj4d2aF7E1rtPXAHaetg=="
-    },
     "@tauri-apps/api@2.8.0": {
       "integrity": "sha512-ga7zdhbS2GXOMTIZRT0mYjKJtR9fivsXzsyq5U3vjDL0s6DTMwYRm0UHNjzTY5dh4+LSC68Sm/7WEiimbQNYlw=="
     },
@@ -668,19 +666,19 @@
     "@tauri-apps/plugin-dialog@2.4.0": {
       "integrity": "sha512-OvXkrEBfWwtd8tzVCEXIvRfNEX87qs2jv6SqmVPiHcJjBhSF/GUvjqUNIDmKByb5N8nvDqVUM7+g1sXwdC/S9w==",
       "dependencies": [
-        "@tauri-apps/api@2.8.0"
+        "@tauri-apps/api"
       ]
     },
     "@tauri-apps/plugin-opener@2.2.7": {
       "integrity": "sha512-uduEyvOdjpPOEeDRrhwlCspG/f9EQalHumWBtLBnp3fRp++fKGLqDOyUhSIn7PzX45b/rKep//ZQSAQoIxobLA==",
       "dependencies": [
-        "@tauri-apps/api@2.6.0"
+        "@tauri-apps/api"
       ]
     },
     "@tauri-apps/plugin-sql@2.3.0": {
       "integrity": "sha512-JYwIocfsLaDWa41LMiZWuzts7yCJR+EpZPRmgpO7Gd7XiAS9S67dKz306j/k/d9XntB0YopMRBol2OIWMschuA==",
       "dependencies": [
-        "@tauri-apps/api@2.6.0"
+        "@tauri-apps/api"
       ]
     },
     "@tybys/wasm-util@0.9.0": {
@@ -1762,9 +1760,6 @@
     "prismjs@1.27.0": {
       "integrity": "sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA=="
     },
-    "prismjs@1.30.0": {
-      "integrity": "sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw=="
-    },
     "property-information@5.6.0": {
       "integrity": "sha512-YUHSPk+A30YPv+0Qf8i9Mbfe/C0hdPXk1s1jPVToV8pk8BQtpw10ct89Eo7OWkutrwqvT0eicAxlOg3dOAu8JA==",
       "dependencies": [
@@ -1848,7 +1843,7 @@
         "highlight.js",
         "highlightjs-vue",
         "lowlight",
-        "prismjs@1.30.0",
+        "prismjs",
         "react",
         "refractor"
       ]
@@ -1864,7 +1859,7 @@
       "dependencies": [
         "hastscript@6.0.0",
         "parse-entities@2.0.0",
-        "prismjs@1.27.0"
+        "prismjs"
       ]
     },
     "rehype-raw@7.0.0": {
@@ -1999,7 +1994,8 @@
         "minizlib",
         "mkdirp",
         "yallist@5.0.0"
-      ]
+      ],
+      "deprecated": true
     },
     "tinyglobby@0.2.14_picomatch@4.0.2": {
       "integrity": "sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==",
@@ -2145,6 +2141,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@tailwindcss/oxide@4.1.11",
         "npm:@tailwindcss/postcss@4",
         "npm:@tailwindcss/typography@~0.5.16",
         "npm:@tailwindcss/vite@^4.1.11",
