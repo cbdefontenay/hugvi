@@ -1,10 +1,25 @@
-﻿import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Link, Outlet} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 export default function NavBarComponent() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const {t} = useTranslation();
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     // Toggle sidebar on mobile
     const toggleSidebar = () => {
@@ -83,11 +98,12 @@ export default function NavBarComponent() {
             {/* Sidebar */}
             <aside
                 className={`
-        fixed top-0 left-0 h-full z-40
+        fixed top-0 left-0 h-full z-20
         bg-(--surface-container-lowest) border-r border-(--outline-variant)
         transition-all duration-300 ease-in-out
         ${isExpanded ? "w-64" : "w-20"}
         ${isExpanded ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        ${isFullscreen ? "hidden" : "block"}
       `}
             >
                 <nav className="h-full flex flex-col pt-6">

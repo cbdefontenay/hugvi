@@ -6,26 +6,34 @@ import {
     handleDeleteNoteAsync,
     handleRenameNoteAsync,
     handleSaveNoteAsync,
+    handleImportFileAsync,
     loadFoldersAndNotes,
 } from "../helpers/DbHelpers.js";
+import {useDb} from "../helpers/DbContext.jsx";
 import EditorComponent from "../components/EditorComponent.jsx";
+import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import {useTranslation} from "react-i18next";
-import {FaRegFolder} from "react-icons/fa";
+import {FolderPlus, Menu, ChevronLeft, X} from "lucide-react";
+import {FolderList} from "../components/sidebar/FolderList.jsx";
+import {SidebarModals} from "../components/sidebar/SidebarModals.jsx";
 
 export default function SidePanelComponent() {
     const {t} = useTranslation();
-    const [folders, setFolders] = useState([]);
+    const {
+        db, setDb,
+        folders, setFolders,
+        notes, setNotes,
+        activeNote, setActiveNote
+    } = useDb();
+    
     const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const [folderName, setFolderName] = useState("");
     const [noteName, setNoteName] = useState("");
     const [error, setError] = useState("");
     const [menuOpen, setMenuOpen] = useState(null);
-    const [db, setDb] = useState(null);
     const [expandedFolders, setExpandedFolders] = useState({});
-    const [notes, setNotes] = useState({});
     const [currentFolderId, setCurrentFolderId] = useState(null);
-    const [activeNote, setActiveNote] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [folderToDelete, setFolderToDelete] = useState(null);
@@ -33,11 +41,64 @@ export default function SidePanelComponent() {
     const [isDeleteNoteConfirmOpen, setIsDeleteNoteConfirmOpen] = useState(false);
     const [noteToModify, setNoteToModify] = useState(null);
     const [newNoteTitle, setNewNoteTitle] = useState("");
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const menuRefs = useRef({});
+    const fileInputRef = useRef(null);
+
+    const handleImportClick = (folderId) => {
+        setCurrentFolderId(folderId);
+        fileInputRef.current.click();
+    };
+
+    const onFileImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const content = event.target.result;
+            try {
+                await handleImportFileAsync(db, currentFolderId, file.name, content, setNotes);
+                alert(t("panel.importSuccess"));
+            } catch (err) {
+                alert(t("panel.importError"));
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = ''; // Reset input
+    };
+
+    // Fullscreen handling logic
+    const toggleFullscreen = () => {
+        if (!isFullscreen) {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+            else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+            setIsFullscreen(true);
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+            setIsFullscreen(false);
+        }
+    };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // Handle folder menus
             if (menuOpen !== null) {
                 const menuElement = menuRefs.current[menuOpen];
                 const buttonElement = document.querySelector(
@@ -54,7 +115,6 @@ export default function SidePanelComponent() {
                 }
             }
 
-            // Handle note menus
             if (noteToModify) {
                 const menuElement = menuRefs.current[`note-${noteToModify.id}`];
                 const buttonElement = document.querySelector(
@@ -79,10 +139,6 @@ export default function SidePanelComponent() {
     }, [menuOpen, noteToModify]);
 
     useEffect(() => {
-        loadFoldersAndNotes(setFolders, setNotes, setDb).then((r) =>
-            console.log(r)
-        );
-
         const handleClickOutside = (event) => {
             if (menuOpen !== null) {
                 const menuElement = menuRefs.current[menuOpen];
@@ -193,6 +249,7 @@ export default function SidePanelComponent() {
     };
 
     const toggleFolderExpansion = (folderId) => {
+        if (isCollapsed) return; // Disable expanding if sidebar is collapsed
         setExpandedFolders((prev) => ({
             ...prev,
             [folderId]: !prev[folderId],
@@ -235,457 +292,124 @@ export default function SidePanelComponent() {
         );
     };
 
+    const toggleSidebar = () => {
+        setIsCollapsed(!isCollapsed);
+        if (!isCollapsed) {
+            // Collapse all folders when sidebar collapses
+            setExpandedFolders({});
+        }
+    };
+
     return (
-        <div className="ml-20 flex h-screen bg-[var(--background)] text-[var(--on-background)]">
+        <div className={`${isFullscreen ? '' : 'ml-20'} flex h-screen bg-[var(--background)] text-[var(--on-background)] overflow-hidden`}>
             {/* Mobile Menu Button - Only shows on small screens */}
             <button
                 className="md:hidden fixed top-4 left-4 z-50 bg-(--primary) text-(--on-primary) p-2 rounded-lg"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? t("panel.closeMenu") : t("panel.openMenu")}
             >
-                {isMobileMenuOpen ? (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
-                    </svg>
-                )}
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
 
             {/* Side Panel */}
             <div
-                className={`ml-20 w-72 bg-(--surface-container-lowest) border-r border-(--outline-variant) flex flex-col fixed h-full overflow-hidden transition-all duration-300
-                ${isMobileMenuOpen ? "left-0" : "-left-72"} md:left-0 z-40`}
+                className={`ml-20 bg-(--surface-container-low) border-r border-(--outline-variant) flex flex-col fixed h-full transition-all duration-300 ease-in-out ${isFullscreen ? 'z-0 invisible' : 'z-40'}
+                ${isMobileMenuOpen ? "left-0 w-72" : "-left-72"} md:left-0 ${isCollapsed ? 'md:w-16' : 'md:w-72'}`}
             >
-                <div className="p-4 border-b border-(--outline-variant)">
-                    <h2 className="text-xl font-semibold">{t("panel.folders")}</h2>
-                </div>
-
-                <div className="flex-1 overflow-y-auto overflow-x-hidden">
-
-                    <button
-                        onClick={() => setIsFolderModalOpen(true)}
-                        className="cursor-pointer w-60 m-4 bg-(--primary-container) text-(--on-primary-container) hover:bg-(--primary) hover:text-(--on-primary) font-medium px-4 py-2 rounded-lg transition-colors"
+                <div className="p-4 border-b border-(--outline-variant) flex justify-between items-center h-16">
+                    <h2 className={`font-semibold text-(--on-surface) transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 text-lg'}`}>
+                        {t("panel.folders")}
+                    </h2>
+                    <button 
+                        onClick={toggleSidebar}
+                        className="p-1.5 rounded-md hover:bg-(--surface-container-highest) text-(--on-surface-variant) transition-colors hidden md:block"
                     >
-                        <span className="flex flex-rom items-center justify-start gap-4">
-                            <FaRegFolder size={16} className=""/> {t("panel.addFolder")}
-                        </span>
+                        {isCollapsed ? <Menu size={18} /> : <ChevronLeft size={18} />}
                     </button>
+                </div>
 
-                    <div className="px-2 space-y-1 relative">
-                        {folders.map((folder, index) => (
-                            <div
-                                key={folder.id}
-                                className="space-y-1 border-b border-(--primary) last:border-b-0 pb-1"
-                            >
-                                <div
-                                    className="flex flex-row items-center bg-(--surface-dim) justify-between font-medium p-2 rounded-lg truncate group"
-                                    title={folder.name}
-                                >
-                                    {/* Folder content remains the same */}
-                                    <div
-                                        className="flex items-center flex-1 cursor-pointer"
-                                        onClick={() => toggleFolderExpansion(folder.id)}
-                                    >
-                    <span className="mr-2 text-[var(--on-surface-variant)]">
-                      {expandedFolders[folder.id] ? (
-                          <svg
-                              fill="fill-(--primary)"
-                              className="fill-(--primary) size-4"
-                              id="Layer_1"
-                              data-name="Layer 1"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                          >
-                              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                              <g
-                                  id="SVGRepo_tracerCarrier"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                              ></g>
-                              <g id="SVGRepo_iconCarrier">
-                                  <polygon
-                                      className="cls-1"
-                                      points="3.5 4.737 4.61 4.005 7.967 9.477 11.397 4 12.5 4.743 7.955 12 3.5 4.737"
-                                  ></polygon>
-                              </g>
-                          </svg>
-                      ) : (
-                          <svg
-                              fill="fill-(--primary)"
-                              className="fill-(--primary) size-4"
-                              id="Layer_1"
-                              data-name="Layer 1"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                          >
-                              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                              <g
-                                  id="SVGRepo_tracerCarrier"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                              ></g>
-                              <g id="SVGRepo_iconCarrier">
-                                  <polygon
-                                      className="cls-1"
-                                      points="4.737 12.5 4.005 11.39 9.477 8.033 4 4.603 4.743 3.5 12 8.045 4.737 12.5"
-                                  ></polygon>
-                              </g>
-                          </svg>
-                      )}
-                    </span>
-                                        <span className="text-(--on-surface)">
-                      {folder.name}
-                    </span>
-                                    </div>
-                                    <button
-                                        className="cursor-pointer three-dots-button opacity-0 group-hover:opacity-100 transition-opacity"
-                                        data-index={index}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleFolderMenu(index, folder.id);
-                                        }}
-                                        aria-label={t("panel.folderOptions")}
-                                    >
-                                        <svg
-                                            className="size-4 fill-(--on-background)"
-                                            viewBox="0 0 1024 1024"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M388.8 896.4v-27.198c.6-2.2 1.6-4.2 2-6.4 8.8-57.2 56.4-102.4 112.199-106.2 62.4-4.4 115.2 31.199 132.4 89.199 2.2 7.6 3.8 15.6 5.8 23.4v27.2c-.6 1.8-1.6 3.399-1.8 5.399-8.6 52.8-46.6 93-98.6 104.4-4 .8-8 2-12 3h-27.2c-1.8-.6-3.6-1.6-5.4-1.8-52-8.4-91.599-45.4-103.6-96.8-1.2-5-2.6-9.6-3.8-14.2zm252.4-768.797l-.001 27.202c-.6 2.2-1.6 4.2-1.8 6.4-9 57.6-56.8 102.6-113.2 106.2-62.2 4-114.8-32-131.8-90.2-2.2-7.401-3.8-15-5.6-22.401v-27.2c.6-1.8 1.6-3.4 2-5.2 9.6-52 39.8-86 90.2-102.2 6.6-2.2 13.6-3.4 20.4-5.2h27.2c1.8.6 3.6 1.6 5.4 1.8 52.2 8.6 91.6 45.4 103.6 96.8 1.201 4.8 2.401 9.4 3.601 13.999zm-.001 370.801v27.2c-.6 2.2-1.6 4.2-2 6.4-9 57.4-58.6 103.6-114.6 106-63 2.8-116.4-35.2-131.4-93.8-1.6-6.2-3-12.4-4.4-18.6v-27.2c.6-2.2 1.6-4.2 2-6.4 8.8-57.4 58.6-103.601 114.6-106.2 63-3 116.4 35.2 131.4 93.8 1.6 6.4 3 12.6 4.4 18.8z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                {/* Notes list for this folder */}
-                                {expandedFolders[folder.id] && notes[folder.id] && (
-                                    <div className="ml-6 space-y-1 border-l-2 border-(--outline-variant) pl-2">
-                                        {notes[folder.id].map((note) => (
-                                            <div
-                                                key={note.id}
-                                                className={`mb-2 group relative p-2 pl-3 text-sm rounded cursor-pointer ${
-                                                    activeNote?.id === note.id
-                                                        ? "bg-(--primary-container) text-(--on-primary-container)"
-                                                        : "hover:bg-(--surface-container-high) text-(--on-surface-variant) hover:text-(--on-surface)"
-                                                }`}
-                                                onClick={() => handleNoteClick(note)}
-                                            >
-                                                {note.title || t("panel.untitledNote")}
-                                                <button
-                                                    className="cursor-pointer absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        if (noteToModify?.id === note.id) {
-                                                            setNoteToModify(null);
-                                                        } else {
-                                                            setNoteToModify({
-                                                                ...note,
-                                                                folder_id: folder.id,
-                                                            });
-                                                            setNewNoteTitle(note.title);
-                                                        }
-                                                    }}
-                                                    aria-label={t("panel.noteOptions")}
-                                                >
-                                                    <svg
-                                                        className="size-4 fill-[var(--on-surface)]"
-                                                        viewBox="0 0 1024 1024"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M388.8 896.4v-27.198c.6-2.2 1.6-4.2 2-6.4 8.8-57.2 56.4-102.4 112.199-106.2 62.4-4.4 115.2 31.199 132.4 89.199 2.2 7.6 3.8 15.6 5.8 23.4v27.2c-.6 1.8-1.6 3.399-1.8 5.399-8.6 52.8-46.6 93-98.6 104.4-4 .8-8 2-12 3h-27.2c-1.8-.6-3.6-1.6-5.4-1.8-52-8.4-91.599-45.4-103.6-96.8-1.2-5-2.6-9.6-3.8-14.2zm252.4-768.797l-.001 27.202c-.6 2.2-1.6 4.2-1.8 6.4-9 57.6-56.8 102.6-113.2 106.2-62.2 4-114.8-32-131.8-90.2-2.2-7.401-3.8-15-5.6-22.401v-27.2c.6-1.8 1.6-3.4 2-5.2 9.6-52 39.8-86 90.2-102.2 6.6-2.2 13.6-3.4 20.4-5.2h27.2c1.8.6 3.6 1.6 5.4 1.8 52.2 8.6 91.6 45.4 103.6 96.8 1.201 4.8 2.401 9.4 3.601 13.999zm-.001 370.801v27.2c-.6 2.2-1.6 4.2-2 6.4-9 57.4-58.6 103.6-114.6 106-63 2.8-116.4-35.2-131.4-93.8-1.6-6.2-3-12.4-4.4-18.6v-27.2c.6-2.2 1.6-4.2 2-6.4 8.8-57.4 58.6-103.601 114.6-106.2 63-3 116.4 35.2 131.4 93.8 1.6 6.4 3 12.6 4.4 18.8z"></path>
-                                                    </svg>
-                                                </button>
-
-                                                {/* Note context menu */}
-                                                {noteToModify?.id === note.id && (
-                                                    <div
-                                                        className="absolute right-0 top-6 z-50 bg-[var(--surface-container-high)] border border-[var(--outline-variant)] rounded shadow-lg text-sm p-1 space-y-1 min-w-[150px]"
-                                                        ref={(el) =>
-                                                            (menuRefs.current[`note-${note.id}`] = el)
-                                                        }
-                                                    >
-                                                        <div
-                                                            className="hover:bg-(--surface-container) hover:text-(--inverse-surface) px-2 py-1.5 rounded cursor-pointer text-(--on-surface)"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setIsRenameNoteModalOpen(true);
-                                                            }}
-                                                        >
-                                                            {t("panel.renameNote")}
-                                                        </div>
-                                                        <div
-                                                            className="hover:bg-[var(--surface-container)] px-2 py-1.5 rounded cursor-pointer text-[var(--error)]"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setIsDeleteNoteConfirmOpen(true);
-                                                            }}
-                                                        >
-                                                            {t("panel.deleteNote")}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-
-                                        {/* Rename Note Modal */}
-                                        {isRenameNoteModalOpen && (
-                                            <div
-                                                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                                                <div
-                                                    className="modal-content bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                                                    <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                                                        {t("panel.renameNote")}
-                                                    </h3>
-
-                                                    <input
-                                                        type="text"
-                                                        value={newNoteTitle}
-                                                        onChange={(e) => {
-                                                            setNewNoteTitle(e.target.value);
-                                                            setError("");
-                                                        }}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                e.preventDefault();
-                                                                handleRenameNote();
-                                                            }
-                                                        }}
-                                                        className="w-full p-2 border border-(--outline-variant) rounded mb-2 bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                                        placeholder={t("panel.noteTitle")}
-                                                        autoFocus
-                                                    />
-
-                                                    {error && (
-                                                        <p className="text-[var(--error)] text-sm mb-4">
-                                                            {error}
-                                                        </p>
-                                                    )}
-
-                                                    <div className="flex justify-end gap-2">
-                                                        <button
-                                                            onClick={() => {
-                                                                setIsRenameNoteModalOpen(false);
-                                                                setError("");
-                                                            }}
-                                                            className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface)"
-                                                        >
-                                                            {t("panel.cancel")}
-                                                        </button>
-                                                        <button
-                                                            onClick={handleRenameNote}
-                                                            className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded"
-                                                        >
-                                                            {t("panel.rename")}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Delete Note Confirmation Modal */}
-                                        {isDeleteNoteConfirmOpen && (
-                                            <div
-                                                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                                                <div
-                                                    className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                                                    <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                                                        {t("panel.deleteNoteConfirm")}
-                                                    </h3>
-                                                    <p className="mb-6 text-(--on-surface-variant)">
-                                                        {t("panel.deleteNoteWarning")}
-                                                    </p>
-                                                    <div className="flex justify-end gap-2">
-                                                        <button
-                                                            onClick={() => setIsDeleteNoteConfirmOpen(false)}
-                                                            className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high)"
-                                                        >
-                                                            {t("panel.cancel")}
-                                                        </button>
-                                                        <button
-                                                            onClick={handleDeleteNote}
-                                                            className="cursor-pointer px-4 py-2 bg-(--error) text-(--on-error) rounded hover:bg-(--error-container) hover:text-(--on-error-container)"
-                                                        >
-                                                            {t("panel.delete")}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-
-                        {/* Menu positioned outside the folder items */}
-                        {menuOpen !== null && (
-                            <div
-                                ref={(el) => (menuRefs.current[menuOpen] = el)}
-                                className="absolute right-4 bg-(--surface-container-high) border border-(--outline-variant) rounded shadow-lg z-50 text-sm p-1 space-y-1 min-w-[150px]"
-                                style={{top: `calc(${menuOpen * 40}px + 56px)`}}
-                            >
-                                <div
-                                    className="hover:bg-(--surface-container) px-2 py-1.5 rounded cursor-pointer text-(--on-surface)"
-                                    onClick={() => openNoteModal(folders[menuOpen].id)}
-                                >
-                                    {t("panel.createNote")}
-                                </div>
-                                <div
-                                    className="hover:bg-(--surface-container) px-2 py-1.5 rounded cursor-pointer text-(--on-surface)">
-                                    {t("panel.renameFolder")}
-                                </div>
-                                <div
-                                    className="hover:bg-(--surface-container) px-2 py-1.5 rounded cursor-pointer text-(--error)"
-                                    onClick={() => handleDeleteFolder(folders[menuOpen].id)}
-                                >
-                                    {t("panel.deleteFolder")}
-                                </div>
-                            </div>
-                        )}
+                <div className="flex-1 overflow-y-auto overflow-x-hidden thin-scrollbar pb-20">
+                    <div className="px-3 pt-4">
+                        <button
+                            onClick={() => setIsFolderModalOpen(true)}
+                            className={`cursor-pointer flex items-center justify-center gap-2 bg-(--primary-container) text-(--on-primary-container) hover:bg-(--primary) hover:text-(--on-primary) font-medium rounded-lg transition-all duration-300 ${isCollapsed ? 'w-10 h-10 p-0 mx-auto' : 'w-full py-2.5 px-4'}`}
+                            title={t("panel.addFolder")}
+                        >
+                            <FolderPlus size={18} />
+                            <span className={`${isCollapsed ? 'hidden' : 'block truncate'}`}>
+                                {t("panel.addFolder")}
+                            </span>
+                        </button>
                     </div>
+
+                    <FolderList 
+                        folders={folders}
+                        expandedFolders={expandedFolders}
+                        toggleFolderExpansion={toggleFolderExpansion}
+                        menuOpen={menuOpen}
+                        toggleFolderMenu={toggleFolderMenu}
+                        notes={notes}
+                        activeNote={activeNote}
+                        handleNoteClick={handleNoteClick}
+                        noteToModify={noteToModify}
+                        setNoteToModify={setNoteToModify}
+                        setNewNoteTitle={setNewNoteTitle}
+                        setIsRenameNoteModalOpen={setIsRenameNoteModalOpen}
+                        setIsDeleteNoteConfirmOpen={setIsDeleteNoteConfirmOpen}
+                        menuRefs={menuRefs}
+                        openNoteModal={openNoteModal}
+                        handleDeleteFolder={handleDeleteFolder}
+                        handleImportClick={handleImportClick}
+                        isCollapsed={isCollapsed}
+                    />
                 </div>
             </div>
 
-            <div className="flex-1 ml-56 md:ml-72 bg-(--surface) overflow-x-hidden">
-                <EditorComponent
-                    activeNote={activeNote}
-                    onSaveNote={handleSaveNote}
-                    onCloseNote={handleCloseNote}
-                />
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept=".txt,.md"
+                onChange={onFileImport}
+            />
+
+            {/* Main Editor Area */}
+            <div className={`flex-1 transition-all duration-300 ease-in-out bg-(--surface) ${isFullscreen ? 'z-[100] ml-0' : 'z-10 ' + (isCollapsed ? 'md:ml-16' : 'md:ml-72')} w-full overflow-hidden flex flex-col h-full absolute inset-0 md:relative md:inset-auto`}>
+                <ErrorBoundary>
+                    <EditorComponent
+                        activeNote={activeNote}
+                        onSaveNote={handleSaveNote}
+                        onCloseNote={handleCloseNote}
+                        isFullscreen={isFullscreen}
+                        toggleFullscreen={toggleFullscreen}
+                    />
+                </ErrorBoundary>
             </div>
 
-            {/* Folder Creation Modal */}
-            {isFolderModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                            {t("panel.createFolder")}
-                        </h3>
-                        <input
-                            type="text"
-                            value={folderName}
-                            onChange={(e) => setFolderName(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleAddFolder();
-                                }
-                            }}
-                            className="w-full p-2 border border-(--outline-variant) rounded mb-2"
-                            placeholder={t("panel.folderName")}
-                            autoFocus
-                        />
-                        {error && <p className="text-(--error) text-sm mb-4">{error}</p>}
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => setIsFolderModalOpen(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high)"
-                            >
-                                {t("panel.cancel")}
-                            </button>
-                            <button
-                                onClick={handleAddFolder}
-                                className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
-                            >
-                                {t("panel.create")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                            {t("panel.deleteFolderConfirm")}
-                        </h3>
-                        <p className="mb-6 text-(--on-surface-variant)">
-                            {t("panel.deleteFolderWarning")}
-                        </p>
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => confirmDelete(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high)"
-                            >
-                                {t("panel.cancel")}
-                            </button>
-                            <button
-                                onClick={() => confirmDelete(true)}
-                                className="cursor-pointer px-4 py-2 bg-(--error) text-(--on-error) rounded hover:bg-(--error-container) hover:text-(--on-error-container)"
-                            >
-                                {t("panel.delete")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Note Creation Modal */}
-            {isNoteModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                            {t("panel.createNote")}
-                        </h3>
-                        <input
-                            type="text"
-                            value={noteName}
-                            onChange={(e) => setNoteName(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleCreateNote();
-                                }
-                            }}
-                            className="w-full p-2 border border-(--outline-variant) rounded mb-2"
-                            placeholder={t("panel.noteTitle")}
-                            autoFocus
-                        />
-                        {error && <p className="text-(--error) text-sm mb-4">{error}</p>}
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => setIsNoteModalOpen(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high)"
-                            >
-                                {t("panel.cancel")}
-                            </button>
-                            <button
-                                onClick={handleCreateNote}
-                                className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
-                            >
-                                {t("panel.create")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <SidebarModals 
+                isFolderModalOpen={isFolderModalOpen}
+                setIsFolderModalOpen={setIsFolderModalOpen}
+                folderName={folderName}
+                setFolderName={setFolderName}
+                handleAddFolder={handleAddFolder}
+                error={error}
+                setError={setError}
+                showDeleteConfirm={showDeleteConfirm}
+                confirmDelete={confirmDelete}
+                isNoteModalOpen={isNoteModalOpen}
+                setIsNoteModalOpen={setIsNoteModalOpen}
+                noteName={noteName}
+                setNoteName={setNoteName}
+                handleCreateNote={handleCreateNote}
+                isRenameNoteModalOpen={isRenameNoteModalOpen}
+                setIsRenameNoteModalOpen={setIsRenameNoteModalOpen}
+                newNoteTitle={newNoteTitle}
+                setNewNoteTitle={setNewNoteTitle}
+                handleRenameNote={handleRenameNote}
+                isDeleteNoteConfirmOpen={isDeleteNoteConfirmOpen}
+                setIsDeleteNoteConfirmOpen={setIsDeleteNoteConfirmOpen}
+                handleDeleteNote={handleDeleteNote}
+            />
         </div>
     );
 }

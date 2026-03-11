@@ -36,7 +36,7 @@
   "plugins": {
     "sql": {
       "preload": [
-        "sqlite:folders_hugvi.db"
+        "sqlite:app.db"
       ]
     }
   }

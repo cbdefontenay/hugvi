@@ -1,6 +1,7 @@
-﻿import {useState} from "react";
+
+import {useState, useRef, useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {FaPalette} from "react-icons/fa";
+import {Palette} from "lucide-react";
 
 export const THEMES = [
     {name: "nord", display: "Nord"},
@@ -32,7 +33,7 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }) {
                 className="cursor-pointer flex items-center space-x-1 px-3 py-1 rounded-md text-sm bg-(--surface-container-high) text-(--on-surface-variant) hover:bg-(--surface-container)"
                 aria-label={t("editor.selectTheme")}
             >
-                <FaPalette size={14} />
+                <Palette size={14} className="text-(--on-surface)"/>
                 <span>{t("editor.theme")}</span>
             </button>
 

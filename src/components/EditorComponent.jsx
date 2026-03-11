@@ -4,9 +4,12 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import {useTranslation} from "react-i18next";
 import ExportPopup from "./ExportPopup.jsx";
-import {FaFileExport, FaEdit, FaEye, FaColumns, FaSave, FaTimes, FaExpand, FaCompress} from "react-icons/fa";
 import SyntaxHighlighterComponent from "./SyntaxHighlighterComponent.jsx";
 import ThemeSelector, {THEMES} from "./ThemeSelector.jsx";
+import EditorHeader from "./editor/EditorHeader.jsx";
+import EditorStatusBar from "./editor/EditorStatusBar.jsx";
+import MarkdownSyntaxOverlay from "./editor/MarkdownSyntaxOverlay.jsx";
+import {FileEdit, Columns, Eye} from "lucide-react";
 
 // View modes
 const VIEW_MODES = {
@@ -15,7 +18,7 @@ const VIEW_MODES = {
     SPLIT: 'split'
 };
 
-export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
+export default function EditorComponent({activeNote, onSaveNote, onCloseNote, isFullscreen, toggleFullscreen}) {
     const {t} = useTranslation();
     const [inputText, setInputText] = useState("");
     const [isEdited, setIsEdited] = useState(false);
@@ -25,8 +28,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         const savedTheme = localStorage.getItem("syntaxTheme");
         return THEMES.some(t => t.name === savedTheme) ? savedTheme : "nord";
     });
-    const [viewMode, setViewMode] = useState(VIEW_MODES.EDIT);
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [viewMode, setViewMode] = useState(VIEW_MODES.SPLIT);
 
     const handleExport = () => {
         console.log("Export clicked, content length:", inputText.length);
@@ -51,48 +53,6 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
             toggleFullscreen();
         }
     }, [activeNote, isEdited, inputText, onSaveNote]);
-
-    const toggleFullscreen = () => {
-        if (!isFullscreen) {
-            // Enter fullscreen
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
-            }
-            setIsFullscreen(true);
-        } else {
-            // Exit fullscreen
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-            setIsFullscreen(false);
-        }
-    };
-
-    // Handle fullscreen change events
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('msfullscreenchange', handleFullscreenChange);
-
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-        };
-    }, []);
 
     useEffect(() => {
         console.log("EditorComponent mounted, activeNote:", activeNote);
@@ -123,8 +83,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
         }
     }, [activeNote]);
 
-    const handleTextChange = (e) => {
-        const text = e.target.value;
+    const handleTextChange = (value) => {
+        if (value === undefined || value === null) return;
+        const text = typeof value === 'string' ? value : (value.target ? value.target.value : "");
         setInputText(text);
         setIsEdited(true);
         updateWordCount(text);
@@ -178,91 +139,23 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
     console.log("Rendering editor with active note:", activeNote.title);
 
     return (
-        <div className={`h-full flex flex-col bg-(--surface-container-low) ${isFullscreen ? 'fixed inset-0 z-50' : ''}`}>
+        <div className={`h-full flex flex-col bg-(--surface-container-low) ${isFullscreen ? 'fixed inset-0 z-[9999]' : ''}`}>
             {/* Header Bar */}
-            <header
-                className="flex items-center justify-between p-4 border-b border-(--outline-variant) bg-(--surface)">
-                <div className="flex items-center space-x-2">
-                    <button
-                        onClick={onCloseNote}
-                        className="cursor-pointer p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
-                        aria-label={t("editor.closeNote")}
-                    >
-                        <FaTimes size={16} />
-                    </button>
-                    <h1 className="text-lg font-semibold text-(--on-surface) truncate max-w-xs md:max-w-md">
-                        {activeNote.title || t("editor.defaultNoteTitle")}
-                    </h1>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                    <span className="text-sm text-(--on-surface-variant)">
-                        {wordCount} {t("editor.words")}
-                    </span>
-
-                    <button
-                        onClick={handleExport}
-                        disabled={!inputText.trim()}
-                        className={`cursor-pointer flex items-center space-x-2 px-3 py-1 rounded-lg text-sm ${inputText.trim() ? 'bg-(--surface-variant) text-(--on-surface-variant) hover:bg-(--surface) hover:text-(--on-surface)' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
-                    >
-                        <FaFileExport size={15}/>
-                        <span>{t("editor.export")}</span>
-                    </button>
-
-                    {/* Fullscreen Toggle */}
-                    <button
-                        onClick={toggleFullscreen}
-                        className="cursor-pointer p-2 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface)"
-                        aria-label={isFullscreen ? t("editor.exitFullscreen") : t("editor.enterFullscreen")}
-                        title={isFullscreen ? t("editor.exitFullscreen") : t("editor.enterFullscreen")}
-                    >
-                        {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
-                    </button>
-
-                    {/* Theme Selector */}
-                    <ThemeSelector
-                        selectedTheme={selectedTheme}
-                        onThemeChange={setSelectedTheme}
-                    />
-
-                    {/* View Mode Selector */}
-                    <div className="flex bg-(--surface-container-high) rounded-lg p-1">
-                        <button
-                            onClick={() => setViewModeHandler(VIEW_MODES.EDIT)}
-                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.EDIT ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
-                            title={t("editor.edit")}
-                        >
-                            <FaEdit size={12} />
-                            <span>{t("editor.edit")}</span>
-                        </button>
-                        <button
-                            onClick={() => setViewModeHandler(VIEW_MODES.SPLIT)}
-                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.SPLIT ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
-                            title={t("editor.split")}
-                        >
-                            <FaColumns size={12} />
-                            <span>{t("editor.split")}</span>
-                        </button>
-                        <button
-                            onClick={() => setViewModeHandler(VIEW_MODES.PREVIEW)}
-                            className={`cursor-pointer px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${viewMode === VIEW_MODES.PREVIEW ? 'bg-(--primary-container) text-(--on-primary-container)' : 'text-(--on-surface-variant)'}`}
-                            title={t("editor.preview")}
-                        >
-                            <FaEye size={12} />
-                            <span>{t("editor.preview")}</span>
-                        </button>
-                    </div>
-
-                    <button
-                        onClick={handleSave}
-                        disabled={!isEdited}
-                        className={`px-4 py-2 rounded-lg text-sm flex items-center space-x-1 ${isEdited ? 'bg-(--primary) text-(--on-primary) hover:bg-(--primary-container) hover:text-(--on-primary-container) cursor-pointer' : 'bg-(--surface-container-high) text-(--on-surface-variant) cursor-not-allowed'}`}
-                    >
-                        <FaSave size={14} />
-                        <span>{t("editor.save")}</span>
-                    </button>
-                </div>
-            </header>
+            <EditorHeader 
+                activeNote={activeNote}
+                wordCount={wordCount}
+                inputText={inputText}
+                isFullscreen={isFullscreen}
+                toggleFullscreen={toggleFullscreen}
+                viewMode={viewMode}
+                setViewModeHandler={setViewModeHandler}
+                isEdited={isEdited}
+                handleSave={handleSave}
+                handleExport={handleExport}
+                onCloseNote={onCloseNote}
+                selectedTheme={selectedTheme}
+                setSelectedTheme={setSelectedTheme}
+            />
 
             {/* Editor/Preview Area */}
             <div className="select-text flex-1 overflow-hidden flex">
@@ -281,16 +174,14 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                     aria-label={t("editor.switchToSplit")}
                                     title={t("editor.switchToSplit")}
                                 >
-                                    <FaColumns size={14} />
+                                    <Columns size={14} />
                                 </button>
                             )}
                         </div>
-                        <textarea
+                        <MarkdownSyntaxOverlay
                             value={inputText}
                             onChange={handleTextChange}
-                            className="flex-1 w-full p-6 font-mono text-sm focus:outline-none resize-none bg-(--surface-container-high) text-(--on-surface) whitespace-pre-wrap"
                             placeholder={t("editor.markdownPlaceholder")}
-                            spellCheck="false"
                         />
                     </div>
                 )}
@@ -310,7 +201,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                     aria-label={t("editor.switchToSplit")}
                                     title={t("editor.switchToSplit")}
                                 >
-                                    <FaColumns size={14} />
+                                    <Columns size={14} />
                                 </button>
                             )}
                         </div>
@@ -357,7 +248,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
                                     ul: ({node, ...props}) => <ul className="text-(--on-surface) leading-6 mb-3 list-disc list-inside text-sm" {...props} />,
                                     ol: ({node, ...props}) => <ol className="text-(--on-surface) leading-6 mb-3 list-decimal list-inside text-sm" {...props} />,
                                     li: ({node, children, ...props}) => {
-                                        const taskListItem = node?.children?.[0]?.type === 'input';
+                                        const taskListItem = node?.children?.[0]?.type === 'element' && node?.children?.[0]?.tagName === 'input';
 
                                         if (taskListItem) {
                                             return (
@@ -416,25 +307,13 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote}) {
             </div>
 
             {/* Status Bar */}
-            <div
-                className="px-4 py-2 text-xs flex justify-between items-center bg-(--surface-container-high) border-t border-(--outline-variant) text-(--on-surface-variant)">
-                <div>
-                    {activeNote.title && (
-                        <span className="truncate max-w-xs inline-block align-middle">
-                            {activeNote.title}
-                        </span>
-                    )}
-                </div>
-                <div className="flex items-center space-x-4">
-                    <span>{new Date().toLocaleDateString()}</span>
-                    <span>{wordCount} {t("editor.words")}</span>
-                    <span>{inputText.length} {t("editor.characters")}</span>
-                    <span className="capitalize">{viewMode} {t("editor.mode")}</span>
-                    {isFullscreen && (
-                        <span className="text-(--primary) font-medium">{t("editor.fullscreen")}</span>
-                    )}
-                </div>
-            </div>
+            <EditorStatusBar
+                activeNote={activeNote}
+                wordCount={wordCount}
+                inputText={inputText}
+                viewMode={viewMode}
+                isFullscreen={isFullscreen}
+            />
             <ExportPopup
                 isOpen={showExportPopup}
                 onClose={() => setShowExportPopup(false)}

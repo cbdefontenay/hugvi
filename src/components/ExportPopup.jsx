@@ -1,19 +1,19 @@
-﻿import {useTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {invoke} from "@tauri-apps/api/core";
 import {useState} from "react";
-import {FaFileAlt, FaFileCode, FaTimes, FaArrowRight, FaCheckCircle, FaExclamationTriangle} from "react-icons/fa";
+import {FileText, FileCode2, X, ArrowRight, CheckCircle, AlertTriangle} from "lucide-react";
 
 function Toast({message, type, onClose}) {
     const bgColor = type === 'error' ? 'alert-error' : 'alert-success';
-    const Icon = type === 'error' ? FaExclamationTriangle : FaCheckCircle;
+    const Icon = type === 'error' ? AlertTriangle : CheckCircle;
 
     return (
         <div className="toast toast-top toast-center z-[100]">
             <div className={`alert ${bgColor} shadow-lg`}>
-                <Icon className="text-lg"/>
+                <Icon className="w-5 h-5"/>
                 <span>{message}</span>
                 <button onClick={onClose} className="btn btn-ghost btn-sm">
-                    <FaTimes/>
+                    <X className="w-4 h-4" />
                 </button>
             </div>
         </div>
@@ -64,7 +64,7 @@ export default function ExportPopup({isOpen, onClose, content}) {
                             onClick={onClose}
                             className="cursor-pointer p-1 rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant)"
                             aria-label={t("common.close")}>
-                            <FaTimes size={16}/>
+                            <X size={16}/>
                         </button>
                     </div>
                     <p className="text-(--on-surface-variant) mb-6">
@@ -77,8 +77,8 @@ export default function ExportPopup({isOpen, onClose, content}) {
                             <div className="flex items-center space-x-3">
                                 <div
                                     className="w-10 h-10 rounded-lg bg-(--primary-container) flex items-center justify-center group-hover:bg-(--primary) transition-colors">
-                                    <FaFileCode
-                                        className="text-(--on-primary-container) group-hover:text-(--on-primary) text-lg"/>
+                                    <FileCode2
+                                        className="text-(--on-primary-container) group-hover:text-(--on-primary) w-5 h-5"/>
                                 </div>
                                 <div className="text-left">
                                     <div className="font-medium text-(--on-surface)">
@@ -89,8 +89,8 @@ export default function ExportPopup({isOpen, onClose, content}) {
                                     </div>
                                 </div>
                             </div>
-                            <FaArrowRight
-                                className="text-(--on-surface-variant) group-hover:text-(--primary) transition-colors"/>
+                            <ArrowRight
+                                className="text-(--on-surface-variant) group-hover:text-(--primary) transition-colors w-4 h-4"/>
                         </button>
                         <button
                             onClick={() => handleExport("txt")}
@@ -98,8 +98,8 @@ export default function ExportPopup({isOpen, onClose, content}) {
                             <div className="flex items-center space-x-3">
                                 <div
                                     className="w-10 h-10 rounded-lg bg-(--secondary-container) flex items-center justify-center group-hover:bg-(--secondary) transition-colors">
-                                    <FaFileAlt
-                                        className="text-(--on-secondary-container) group-hover:text-(--on-secondary) text-lg"/>
+                                    <FileText
+                                        className="text-(--on-secondary-container) group-hover:text-(--on-secondary) w-5 h-5"/>
                                 </div>
                                 <div className="text-left">
                                     <div className="font-medium text-(--on-surface)">
@@ -110,8 +110,8 @@ export default function ExportPopup({isOpen, onClose, content}) {
                                     </div>
                                 </div>
                             </div>
-                            <FaArrowRight
-                                className="text-(--on-surface-variant) group-hover:text-(--secondary) transition-colors"/>
+                            <ArrowRight
+                                className="text-(--on-surface-variant) group-hover:text-(--secondary) transition-colors w-4 h-4"/>
                         </button>
                     </div>
                     <button

@@ -9,6 +9,7 @@ export const handleAddFolderAsync = async (
     setError,
     db
 ) => {
+    if (!db) { setError("Database not ready yet, please wait."); return; }
     const name = folderName.trim();
     if (!name) {
         setError("Folder name cannot be empty");
@@ -61,6 +62,7 @@ export const handleDeleteFolderAsync = async (
     setActiveNote
 ) => {
     if (!confirmation) return;
+    if (!db) throw new Error("Database not ready");
 
     try {
         await db.execute("DELETE FROM note WHERE folder_id = $1", [folderId]);
@@ -72,10 +74,7 @@ export const handleDeleteFolderAsync = async (
         delete newNotes[folderId];
         setNotes(newNotes);
 
-        if (
-            activeNote &&
-            newNotes[folderId]?.some((note) => note.id === activeNote.id)
-        ) {
+        if (activeNote && activeNote.folder_id === folderId) {
             setActiveNote(null);
         }
 
@@ -109,6 +108,7 @@ export const handleCreateNoteAsync = async (
     setExpandedFolders,
     db
 ) => {
+    if (!db) { setError("Database not ready yet, please wait."); return; }
     if (!noteName.trim()) {
         setError("Note name cannot be empty");
         return;
@@ -148,6 +148,33 @@ export const handleCreateNoteAsync = async (
     }
 };
 
+export const handleImportFileAsync = async (db, folderId, fileName, content, setNotes) => {
+    try {
+        const title = fileName.replace(/\.(txt|md)$/i, '') || "Imported Note";
+        
+        await db.execute(
+            "INSERT INTO note (title, content, date_created, folder_id) VALUES ($1, $2, datetime('now'), $3)",
+            [title, content, folderId]
+        );
+
+        const updatedNotes = await db.select(
+            "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1 ORDER BY date_created ASC",
+            [folderId]
+        );
+
+        setNotes((prev) => {
+            const newNotes = {...prev};
+            newNotes[folderId] = updatedNotes;
+            return newNotes;
+        });
+        
+        return true;
+    } catch (e) {
+        console.error("Failed to import file:", e);
+        throw e;
+    }
+};
+
 export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
     try {
         const db = await Database.load("sqlite:app.db");
@@ -181,6 +208,7 @@ export const loadFoldersAndNotes = async (setFolders, setNotes, setDb) => {
 };
 
 export const handleSaveNoteAsync = async (db, noteId, newContent, setNotes) => {
+    if (!db) throw new Error("Database not ready");
     try {
         await db.execute("UPDATE note SET content = $1 WHERE id = $2", [
             newContent,
@@ -203,6 +231,7 @@ export const handleSaveNoteAsync = async (db, noteId, newContent, setNotes) => {
 };
 
 export const handleRenameNoteAsync = async (db, noteId, newTitle, setNotes) => {
+    if (!db) throw new Error("Database not ready");
     try {
         await db.execute("UPDATE note SET title = $1 WHERE id = $2", [
             newTitle,
@@ -237,6 +266,7 @@ export const handleDeleteNoteAsync = async (
     activeNote,
     setActiveNote
 ) => {
+    if (!db) throw new Error("Database not ready");
     try {
         await db.execute("DELETE FROM note WHERE id = $1", [noteId]);
 
@@ -258,6 +288,41 @@ export const handleDeleteNoteAsync = async (
     } catch (e) {
         console.error("Failed to delete note:", e);
         throw new Error("Failed to delete note");
+    }
+};
+
+export const handleClearEmptyNotesAsync = async (db, setNotes) => {
+    try {
+        await db.execute("DELETE FROM note WHERE content IS NULL OR TRIM(content) = ''");
+        // Reload all notes to sync UI
+        const folderResult = await db.select("SELECT id FROM folders");
+        const notesMap = {};
+        for (const folder of folderResult) {
+            const noteResult = await db.select(
+                "SELECT id, title, content, folder_id FROM note WHERE folder_id = $1 ORDER BY date_created ASC",
+                [folder.id]
+            );
+            notesMap[folder.id] = noteResult || [];
+        }
+        setNotes(notesMap);
+        await db.execute("VACUUM");
+    } catch (e) {
+        console.error("Failed to clear empty notes:", e);
+        throw e;
+    }
+};
+
+export const handleClearAllDataAsync = async (db, setFolders, setNotes, setActiveNote) => {
+    try {
+        await db.execute("DELETE FROM note");
+        await db.execute("DELETE FROM folders");
+        setFolders([]);
+        setNotes({});
+        setActiveNote(null);
+        await db.execute("VACUUM");
+    } catch (e) {
+        console.error("Failed to clear all data:", e);
+        throw e;
     }
 };
 

@@ -1,4 +1,4 @@
-﻿import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {
     atomDark,
     darcula,
@@ -12,8 +12,8 @@ import {
     vscDarkPlus
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTranslation} from "react-i18next";
-import {FaCopy, FaCheck} from "react-icons/fa";
 import {useState} from "react";
+import {Copy, Check} from "lucide-react";
 
 const THEME_MAP = {
     nord: nord,
@@ -59,9 +59,9 @@ export default function SyntaxHighlighterComponent({
                     title={t("editor.copyCode")}
                 >
                     {copied ? (
-                        <FaCheck size={12} className="text-green-500" />
+                        <Check size={12} className="text-green-500" />
                     ) : (
-                        <FaCopy size={12} className="text-(--on-surface-container-high) group-hover:text-(--primary)" />
+                        <Copy size={12} className="text-(--on-surface-variant) group-hover:text-(--primary)" />
                     )}
                 </button>
             </div>

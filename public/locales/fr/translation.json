@@ -5,12 +5,15 @@
       "appearance": "Apparence",
       "language": "Langues",
       "keyboard": "Raccourcis clavier",
+      "data": "Gestion des données",
       "about": "À propos"
     },
     "appearance": {
       "title": "Apparence",
       "darkMode": "Mode sombre",
-      "description": "Basculer entre le thème clair et sombre"
+      "description": "Basculer entre le thème clair et sombre",
+      "appTheme": "Thème de l'application",
+      "themeDescription": "Choisissez votre thème d'application préféré"
     },
     "language": {
       "title": "Changer la langue"
@@ -19,6 +22,21 @@
       "title": "Raccourcis clavier",
       "newFolder": "Nouveau dossier",
       "saveNote": "Enregistrer la note"
+    },
+    "data": {
+      "title": "Gestion des données",
+      "description": "Gérez vos notes et la base de données de l'application. Utilisez ces outils pour nettoyer ou réinitialiser vos données.",
+      "cleanupTitle": "Nettoyer les notes vides",
+      "cleanupDesc": "Supprime toutes les notes sans contenu ou contenant uniquement des espaces.",
+      "cleanupButton": "Lancer le nettoyage",
+      "cleanupSuccess": "Notes vides nettoyées avec succès.",
+      "cleanupError": "Échec du nettoyage des notes vides.",
+      "resetTitle": "Réinitialiser toutes les données",
+      "resetDesc": "Efface tous les dossiers et notes de façon permanente. Cette action est irréversible.",
+      "resetButton": "Tout effacer",
+      "resetConfirm": "Êtes-vous SÛR de vouloir TOUT supprimer ? Cette action est irréversible.",
+      "resetSuccess": "Toutes les données ont été effacées.",
+      "resetError": "Échec de l'effacement des données."
     },
     "about": {
       "title": "À propos",
@@ -56,7 +74,15 @@
     "deleteFolderConfirm": "Supprimer le dossier",
     "deleteFolderWarning": "Êtes-vous sûr de vouloir supprimer ce dossier ? Toutes les notes qu'il contient seront également supprimées.",
     "openMenu": "Ouvrir le menu",
-    "closeMenu": "Fermer le menu"
+    "closeMenu": "Fermer le menu",
+    "importNote": "Importer une note (.txt, .md)",
+    "importSuccess": "Note importée avec succès",
+    "importError": "Échec de l'importation de la note"
+  },
+  "error": {
+    "title": "Une erreur est survenue dans l'éditeur.",
+    "recover": "Essayer de récupérer",
+    "message": "L'application a rencontré une erreur inattendue lors du rendu ou du traitement du texte."
   },
   "editor": {
     "noNoteSelected": "Aucune note sélectionnée",

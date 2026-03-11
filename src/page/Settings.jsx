@@ -3,12 +3,18 @@ import {useTheme} from "../helpers/ThemeProvider";
 import {useTranslation} from "react-i18next";
 import LanguageSelector from "../components/LanguageSelector.jsx";
 import {Link} from "react-router-dom";
+import {useDb} from "../helpers/DbContext.jsx";
+import {handleClearAllDataAsync, handleClearEmptyNotesAsync} from "../helpers/DbHelpers.js";
+import {Trash2, Database, Eraser, X} from "lucide-react";
 
 export default function Settings() {
     const [mounted, setMounted] = useState(false);
-    const {theme, toggleTheme} = useTheme();
+    const {theme, changeTheme} = useTheme();
     const [activeTab, setActiveTab] = useState("appearance");
     const {t} = useTranslation();
+    const {db, setFolders, setNotes, setActiveNote} = useDb();
+    const [isClearing, setIsClearing] = useState(false);
+    const [message, setMessage] = useState({type: '', text: ''});
 
     useEffect(() => setMounted(true), []);
 
@@ -44,6 +50,12 @@ export default function Settings() {
                             {t("settings.tabs.keyboard")}
                         </button>
                         <button
+                            onClick={() => setActiveTab("data")}
+                            className={`cursor-pointer w-full text-left px-3 py-2 rounded-md ${activeTab === "data" ? "bg-(--primary-container) text-(--on-primary-container)" : "hover:bg-(--surface-container-high)"}`}
+                        >
+                            Data Management
+                        </button>
+                        <button
                             onClick={() => setActiveTab("about")}
                             className={`cursor-pointer w-full text-left px-3 py-2 rounded-md ${activeTab === "about" ? "bg-(--primary-container) text-(--on-primary-container)" : "hover:bg-(--surface-container-high)"}`}
                         >
@@ -57,23 +69,44 @@ export default function Settings() {
                         <div className="space-y-6">
                             <h2 className="text-xl font-semibold">{t("settings.appearance.title")}</h2>
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h3 className="font-medium">{t("settings.appearance.darkMode")}</h3>
-                                        <p className="text-sm text-(--on-surface-variant)">
-                                            {t("settings.appearance.description")}
-                                        </p>
+                                <div className="flex flex-col space-y-2">
+                                    <h3 className="font-medium">App Theme</h3>
+                                    <p className="text-sm text-(--on-surface-variant)">
+                                        Choose your preferred application theme
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-4 mt-2">
+                                        <button
+                                            onClick={() => changeTheme("light")}
+                                            className={`p-4 rounded-xl border flex flex-col items-center justify-center space-y-2 transition-all cursor-[var(--cursor-pointer,pointer)] ${theme === "light" ? "border-(--primary) bg-(--primary-container) text-(--on-primary-container)" : "border-(--outline-variant) hover:bg-(--surface-container-high) text-(--on-surface)"}`}
+                                        >
+                                            <div className="w-8 h-8 rounded-full border border-(--outline-variant)" style={{backgroundColor: '#FEF7FF'}}></div>
+                                            <span className="font-medium">Light</span>
+                                        </button>
+                                        
+                                        <button
+                                            onClick={() => changeTheme("dark")}
+                                            className={`p-4 rounded-xl border flex flex-col items-center justify-center space-y-2 transition-all cursor-pointer ${theme === "dark" ? "border-(--primary) bg-(--primary-container) text-(--on-primary-container)" : "border-(--outline-variant) hover:bg-(--surface-container-high) text-(--on-surface)"}`}
+                                        >
+                                            <div className="w-8 h-8 rounded-full border border-(--outline-variant)" style={{backgroundColor: '#151218'}}></div>
+                                            <span className="font-medium">Dark</span>
+                                        </button>
+
+                                        <button
+                                            onClick={() => changeTheme("sepia")}
+                                            className={`p-4 rounded-xl border flex flex-col items-center justify-center space-y-2 transition-all cursor-pointer ${theme === "sepia" ? "border-(--primary) bg-(--primary-container) text-(--on-primary-container)" : "border-(--outline-variant) hover:bg-(--surface-container-high) text-(--on-surface)"}`}
+                                        >
+                                            <div className="w-8 h-8 rounded-full border border-(--outline-variant)" style={{backgroundColor: '#FCF8F4'}}></div>
+                                            <span className="font-medium">Sepia</span>
+                                        </button>
+
+                                        <button
+                                            onClick={() => changeTheme("ocean")}
+                                            className={`p-4 rounded-xl border flex flex-col items-center justify-center space-y-2 transition-all cursor-pointer ${theme === "ocean" ? "border-(--primary) bg-(--primary-container) text-(--on-primary-container)" : "border-(--outline-variant) hover:bg-(--surface-container-high) text-(--on-surface)"}`}
+                                        >
+                                            <div className="w-8 h-8 rounded-full border border-(--outline-variant)" style={{backgroundColor: '#0F1724'}}></div>
+                                            <span className="font-medium">Ocean</span>
+                                        </button>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="sr-only peer"
-                                            checked={theme === "dark"}
-                                            onChange={toggleTheme}
-                                        />
-                                        <div
-                                            className="w-11 h-6 bg-(--surface-container-high) peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--on-surface)] after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--primary)]"></div>
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -88,20 +121,84 @@ export default function Settings() {
                         </div>
                     )}
 
-                    {activeTab === "keyboard" && (
+                    {activeTab === "data" && (
                         <div className="space-y-6">
-                            <h2 className="text-xl font-semibold">{t("settings.keyboard.title")}</h2>
+                            <h2 className="text-xl font-semibold flex items-center gap-2">
+                                <Database size={24} className="text-(--primary)" />
+                                {t("settings.data.title")}
+                            </h2>
+                            <p className="text-(--on-surface-variant)">
+                                {t("settings.data.description")}
+                            </p>
+
+                            {message.text && (
+                                <div className={`p-4 rounded-lg flex items-center gap-3 ${message.type === 'error' ? 'bg-(--error-container) text-(--on-error-container)' : 'bg-(--primary-container) text-(--on-primary-container)'}`}>
+                                    <span className="flex-1">{message.text}</span>
+                                    <button onClick={() => setMessage({type: '', text: ''})} className="hover:opacity-70">
+                                        <X size={18} />
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <h3 className="font-medium">{t("settings.keyboard.saveNote")}</h3>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <kbd
-                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">Ctrl</kbd>
-                                            <kbd
-                                                className="px-2 py-1 bg-(--surface-container-high) rounded text-sm">S</kbd>
+                                <div className="p-5 border border-(--outline-variant) rounded-2xl bg-(--surface-container-low) flex items-center justify-between group hover:border-(--primary/30) transition-all">
+                                    <div className="space-y-1">
+                                        <div className="font-semibold text-lg flex items-center gap-2">
+                                            <Eraser size={18} className="text-(--primary)" />
+                                            {t("settings.data.cleanupTitle")}
                                         </div>
+                                        <p className="text-sm text-(--on-surface-variant)">
+                                            {t("settings.data.cleanupDesc")}
+                                        </p>
                                     </div>
+                                    <button
+                                        disabled={isClearing}
+                                        onClick={async () => {
+                                            setIsClearing(true);
+                                            try {
+                                                await handleClearEmptyNotesAsync(db, setNotes);
+                                                setMessage({type: 'success', text: t("settings.data.cleanupSuccess")});
+                                            } catch (e) {
+                                                setMessage({type: 'error', text: t("settings.data.cleanupError")});
+                                            } finally {
+                                                setIsClearing(false);
+                                            }
+                                        }}
+                                        className="cursor-pointer px-4 py-2 rounded-full border border-(--outline) hover:bg-(--surface-container-high) text-(--on-surface) font-medium transition-colors disabled:opacity-50"
+                                    >
+                                        {t("settings.data.cleanupButton")}
+                                    </button>
+                                </div>
+
+                                <div className="p-5 border border-(--error/20) rounded-2xl bg-(--error-container/10) flex items-center justify-between group hover:bg-(--error-container/20) transition-all">
+                                    <div className="space-y-1">
+                                        <div className="font-semibold text-lg flex items-center gap-2 text-(--error)">
+                                            <Trash2 size={18} />
+                                            {t("settings.data.resetTitle")}
+                                        </div>
+                                        <p className="text-sm text-(--on-surface-variant)">
+                                            {t("settings.data.resetDesc")}
+                                        </p>
+                                    </div>
+                                    <button
+                                        disabled={isClearing}
+                                        onClick={async () => {
+                                            if (confirm(t("settings.data.resetConfirm"))) {
+                                                setIsClearing(true);
+                                                try {
+                                                    await handleClearAllDataAsync(db, setFolders, setNotes, setActiveNote);
+                                                    setMessage({type: 'success', text: t("settings.data.resetSuccess")});
+                                                } catch (e) {
+                                                    setMessage({type: 'error', text: t("settings.data.resetError")});
+                                                } finally {
+                                                    setIsClearing(false);
+                                                }
+                                            }
+                                        }}
+                                        className="cursor-pointer px-4 py-2 rounded-full bg-(--error) text-(--on-error) hover:bg-(--error-hover) font-medium transition-colors disabled:opacity-50"
+                                    >
+                                        {t("settings.data.resetButton")}
+                                    </button>
                                 </div>
                             </div>
                         </div>

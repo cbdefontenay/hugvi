@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
@@ -15,14 +15,21 @@ export function ThemeProvider({ children }) {
     }, []);
 
     const toggleTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
+        // Fallback toggle for quick light/dark
+        const newTheme = theme === "dark" || theme === "ocean" ? "light" : "dark";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        document.documentElement.className = newTheme;
+    };
+
+    const changeTheme = (newTheme) => {
         setTheme(newTheme);
         localStorage.setItem("theme", newTheme);
         document.documentElement.className = newTheme;
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme, changeTheme }}>
             {children}
         </ThemeContext.Provider>
     );

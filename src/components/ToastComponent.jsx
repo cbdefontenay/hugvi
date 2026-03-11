@@ -1,6 +1,7 @@
-﻿import { useEffect } from "react";
+
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FaTimes, FaCheckCircle, FaExclamationTriangle, FaExclamationCircle } from "react-icons/fa";
+import { X, CheckCircle, AlertTriangle, AlertCircle } from "lucide-react";
 
 export default function ToastComponent({ message, type = "error", onClose, duration = 5000 }) {
     const { t } = useTranslation();
@@ -19,20 +20,20 @@ export default function ToastComponent({ message, type = "error", onClose, durat
                 return {
                     bg: "bg-green-500 dark:bg-green-600",
                     text: "text-white",
-                    icon: <FaCheckCircle className="w-5 h-5" />
+                    icon: <CheckCircle className="w-5 h-5" />
                 };
             case "warning":
                 return {
                     bg: "bg-amber-500 dark:bg-amber-600",
                     text: "text-white",
-                    icon: <FaExclamationTriangle className="w-5 h-5" />
+                    icon: <AlertTriangle className="w-5 h-5" />
                 };
             case "error":
             default:
                 return {
                     bg: "bg-red-500 dark:bg-red-600",
                     text: "text-white",
-                    icon: <FaExclamationCircle className="w-5 h-5" />
+                    icon: <AlertCircle className="w-5 h-5" />
                 };
         }
     };
@@ -55,7 +56,7 @@ export default function ToastComponent({ message, type = "error", onClose, durat
                     className="flex-shrink-0 ml-4 hover:bg-white hover:bg-opacity-20 rounded-full p-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                     aria-label={t("common.close")}
                 >
-                    <FaTimes className="w-4 h-4" />
+                    <X className="w-4 h-4" />
                 </button>
             </div>
         </div>

@@ -5,12 +5,15 @@
       "appearance": "Appearance",
       "language": "Languages",
       "keyboard": "Keyboard Shortcuts",
+      "data": "Data Management",
       "about": "About"
     },
     "appearance": {
       "title": "Appearance",
       "darkMode": "Dark Mode",
-      "description": "Switch between light and dark theme"
+      "description": "Switch between light and dark theme",
+      "appTheme": "App Theme",
+      "themeDescription": "Choose your preferred application theme"
     },
     "language": {
       "title": "Change the language"
@@ -19,6 +22,21 @@
       "title": "Keyboard Shortcuts",
       "newFolder": "New Folder",
       "saveNote": "Save Note"
+    },
+    "data": {
+      "title": "Data Management",
+      "description": "Manage your stored notes and application database. Use these tools to clean up or reset your data.",
+      "cleanupTitle": "Cleanup Empty Notes",
+      "cleanupDesc": "Removes all notes with no content or only whitespace.",
+      "cleanupButton": "Run Cleanup",
+      "cleanupSuccess": "Empty notes cleared successfully.",
+      "cleanupError": "Failed to clear empty notes.",
+      "resetTitle": "Reset All Data",
+      "resetDesc": "Wipes all folders and notes permanently. This cannot be undone.",
+      "resetButton": "Wipe Everything",
+      "resetConfirm": "Are you SURE you want to delete EVERYTHING? This cannot be undone.",
+      "resetSuccess": "All data has been wiped.",
+      "resetError": "Failed to wipe data."
     },
     "about": {
       "title": "About",
@@ -56,7 +74,15 @@
     "deleteFolderConfirm": "Delete Folder",
     "deleteFolderWarning": "Are you sure you want to delete this folder? This will also delete all notes inside it.",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "importNote": "Import Note (.txt, .md)",
+    "importSuccess": "Note imported successfully",
+    "importError": "Failed to import note"
+  },
+  "error": {
+    "title": "Something went wrong in the editor.",
+    "recover": "Try to recover",
+    "message": "The application encountered an unexpected error while rendering or processing text."
   },
   "editor": {
     "noNoteSelected": "No Note Selected",

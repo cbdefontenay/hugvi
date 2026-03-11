@@ -5,12 +5,15 @@
       "appearance": "Darstellung",
       "language": "Sprachen",
       "keyboard": "Tastenkombinationen",
+      "data": "Datenverwaltung",
       "about": "Über"
     },
     "appearance": {
       "title": "Darstellung",
       "darkMode": "Dunkelmodus",
-      "description": "Zwischen hellem und dunklem Thema wechseln"
+      "description": "Zwischen hellem und dunklem Thema wechseln",
+      "appTheme": "App-Thema",
+      "themeDescription": "Wählen Sie Ihr bevorzugtes App-Thema"
     },
     "language": {
       "title": "Sprache ändern"
@@ -19,6 +22,21 @@
       "title": "Tastenkombinationen",
       "newFolder": "Neuer Ordner",
       "saveNote": "Notiz speichern"
+    },
+    "data": {
+      "title": "Datenverwaltung",
+      "description": "Verwalten Sie Ihre gespeicherten Notizen und die Datenbank. Nutzen Sie diese Tools zum Bereinigen oder Zurücksetzen.",
+      "cleanupTitle": "Leere Notizen bereinigen",
+      "cleanupDesc": "Entfernt alle Notizen ohne Inhalt oder nur mit Leerzeichen.",
+      "cleanupButton": "Bereinigung starten",
+      "cleanupSuccess": "Leere Notizen erfolgreich bereinigt.",
+      "cleanupError": "Bereinigung der leeren Notizen fehlgeschlagen.",
+      "resetTitle": "Alle Daten zurücksetzen",
+      "resetDesc": "Löscht alle Ordner und Notizen dauerhaft. Dies kann nicht rückgängig gemacht werden.",
+      "resetButton": "Alles löschen",
+      "resetConfirm": "Sind Sie SICHER, dass Sie ALLES löschen möchten? Dies kann nicht rückgängig gemacht werden.",
+      "resetSuccess": "Alle Daten wurden gelöscht.",
+      "resetError": "Datenlöschung fehlgeschlagen."
     },
     "about": {
       "title": "Über",
@@ -56,7 +74,15 @@
     "deleteFolderConfirm": "Ordner löschen",
     "deleteFolderWarning": "Bist du sicher, dass du diesen Ordner löschen möchtest? Alle darin enthaltenen Notizen werden ebenfalls gelöscht.",
     "openMenu": "Menü öffnen",
-    "closeMenu": "Menü schließen"
+    "closeMenu": "Menü schließen",
+    "importNote": "Notiz importieren (.txt, .md)",
+    "importSuccess": "Notiz erfolgreich importiert",
+    "importError": "Import der Notiz fehlgeschlagen"
+  },
+  "error": {
+    "title": "Etwas ist im Editor schiefgelaufen.",
+    "recover": "Wiederherstellen versuchen",
+    "message": "Die Anwendung ist beim Rendern oder Verarbeiten von Text auf einen unerwarteten Fehler gestoßen."
   },
   "editor": {
     "noNoteSelected": "Keine Notiz ausgewählt",
