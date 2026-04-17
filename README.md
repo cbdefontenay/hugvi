@@ -14,7 +14,7 @@ Or download the **AppImage** from the [releases page](https://github.com/cbdefon
 [![Microsoft Store](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9nwg8bt6590c?hl=en-gb&gl=US)
 
 ---
-<img width="1916" height="990" alt="image" src="https://github.com/user-attachments/assets/1284dee7-a113-4323-9c65-b564891752ba" />
+<img width="1916" height="990" alt="image" src="./profile.png" />
 
 ---
 
