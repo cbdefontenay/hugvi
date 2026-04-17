@@ -9,7 +9,7 @@ Install in on **Arch Linux**:
 yay -S hugvi && Hugvi
 ```
 
-Or download the **AppImage** from the [releases page](https://github.com/cbdefontenay/hugvi/releases/tag/v-1.3.2).
+Or download the **AppImage** from the [releases page](https://github.com/cbdefontenay/hugvi/releases/tag/v-1.3.3).
 
 [![Microsoft Store](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9nwg8bt6590c?hl=en-gb&gl=US)
 
