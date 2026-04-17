@@ -5,6 +5,7 @@ import rehypeRaw from "rehype-raw";
 import {useTranslation} from "react-i18next";
 import ExportPopup from "./ExportPopup.jsx";
 import SyntaxHighlighterComponent from "./SyntaxHighlighterComponent.jsx";
+import Mermaid from "./Mermaid.jsx";
 import ThemeSelector, {THEMES} from "./ThemeSelector.jsx";
 import EditorHeader from "./editor/EditorHeader.jsx";
 import EditorStatusBar from "./editor/EditorStatusBar.jsx";
@@ -40,7 +41,10 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
     };
 
     const handleKeyDown = useCallback((e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        // Check if Ctrl+S shortcut is enabled from settings
+        const useCtrlS = localStorage.getItem('useCtrlS') !== 'false';
+        
+        if (useCtrlS && (e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
             if (activeNote && isEdited) {
                 onSaveNote(activeNote.id, inputText);
@@ -110,10 +114,17 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
     // Add debug logging
     console.log("EditorComponent render - activeNote:", activeNote, "inputText length:", inputText.length);
 
+    const handleCloseNote = () => {
+        if (isFullscreen) {
+            toggleFullscreen();
+        }
+        onCloseNote();
+    };
+
     if (!activeNote) {
         console.log("No active note, showing placeholder");
         return (
-            <div className="flex items-center justify-center h-full bg-(--surface-container-low)">
+            <div className={`flex items-center justify-center h-full bg-(--surface-container-low) ${isFullscreen ? 'fixed inset-0 z-[9999]' : ''}`}>
                 <div className="text-center p-8 max-w-md">
                     <div className="flex justify-center text-(--primary) mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
@@ -131,6 +142,14 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                     <p className="text-(--on-surface-variant) mb-6">
                         {t("editor.selectNotePrompt")}
                     </p>
+                    {isFullscreen && (
+                        <button 
+                            onClick={toggleFullscreen}
+                            className="px-4 py-2 bg-(--primary) text-(--on-primary) rounded-lg hover:bg-(--primary-container) hover:text-(--on-primary-container) transition-colors cursor-pointer"
+                        >
+                            {t("editor.exitFullscreen")}
+                        </button>
+                    )}
                 </div>
             </div>
         );
@@ -152,16 +171,16 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                 isEdited={isEdited}
                 handleSave={handleSave}
                 handleExport={handleExport}
-                onCloseNote={onCloseNote}
+                onCloseNote={handleCloseNote}
                 selectedTheme={selectedTheme}
                 setSelectedTheme={setSelectedTheme}
             />
 
             {/* Editor/Preview Area */}
-            <div className="select-text flex-1 overflow-hidden flex">
+            <div className={`select-text flex-1 overflow-hidden flex flex-col md:flex-row`}>
                 {/* Editor Panel - Show in edit mode or split mode */}
                 {(viewMode === VIEW_MODES.EDIT || viewMode === VIEW_MODES.SPLIT) && (
-                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1' : 'flex-1'} h-full flex flex-col border-r border-(--outline-variant)`}>
+                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1 min-h-[50%] md:min-h-0' : 'flex-1'} h-full flex flex-col border-b md:border-b-0 md:border-r border-(--outline-variant)`}>
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
@@ -188,7 +207,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
 
                 {/* Preview Panel - Show in preview mode or split mode */}
                 {(viewMode === VIEW_MODES.PREVIEW || viewMode === VIEW_MODES.SPLIT) && (
-                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1' : 'flex-1'} h-full flex flex-col overflow-hidden`}>
+                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1 min-h-[50%] md:min-h-0' : 'flex-1'} h-full flex flex-col overflow-hidden`}>
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
@@ -206,7 +225,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                             )}
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6 bg-(--surface-container-high)">
+                        <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-(--surface-container-high)">
                             <Markdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -216,6 +235,9 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                                         const codeText = String(children).replace(/\n$/, '');
 
                                         if (!inline && match) {
+                                            if (match[1] === "mermaid") {
+                                                return <Mermaid chart={codeText} />;
+                                            }
                                             return (
                                                 <SyntaxHighlighterComponent
                                                     language={match[1]}
@@ -295,7 +317,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                                         <hr className="my-4 border-t border-(--outline) opacity-30" {...props} />
                                     ),
                                     img: ({node, ...props}) => (
-                                        <img className="rounded border border-(--outline) max-w-full h-auto my-3" {...props} />
+                                        <img className="rounded-lg border border-(--outline-variant) max-w-full h-auto my-4 shadow-sm" {...props} />
                                     ),
                                 }}
                             >

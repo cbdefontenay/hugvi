@@ -54,7 +54,8 @@
   --surface-container-highest: rgb(231 224 232);
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -80,4 +81,46 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--outline);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--outline-variant);
+  border-radius: 10px;
+}
+
+/* Base animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+  backdrop-filter: blur(2px);
+}
+
+/* Responsiveness tweaks */
+@media (max-width: 768px) {
+  .md\:ml-20 {
+    margin-left: 0 !important;
+  }
+}
+
+/* Custom selection color */
+::selection {
+  background-color: var(--primary-container);
+  color: var(--on-primary-container);
 }

@@ -15,22 +15,31 @@ export default function Settings() {
     const {db, setFolders, setNotes, setActiveNote} = useDb();
     const [isClearing, setIsClearing] = useState(false);
     const [message, setMessage] = useState({type: '', text: ''});
+    const [useCtrlS, setUseCtrlS] = useState(() => {
+        return localStorage.getItem('useCtrlS') !== 'false';
+    });
 
-    useEffect(() => setMounted(true), []);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('useCtrlS', useCtrlS.toString());
+    }, [useCtrlS]);
 
     if (!mounted) return null;
 
     return (
-        <div className="ml-20 flex flex-col h-screen bg-(--background) text-(--on-background)">
-            <div className="border-b border-(--outline-variant) p-4">
+        <div className="md:ml-20 flex flex-col h-screen bg-(--background) text-(--on-background)">
+            <div className="border-b border-(--outline-variant) p-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">
                     {t("settings.header")}
                 </h1>
             </div>
 
-            <div className="flex flex-1 overflow-hidden">
-                <div className="w-54 border-r border-(--outline-variant) p-4">
-                    <div className="space-y-1">
+            <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
+                <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-(--outline-variant) p-2 md:p-4 overflow-x-auto whitespace-nowrap md:whitespace-normal no-scrollbar">
+                    <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-1">
                         <button
                             onClick={() => setActiveTab("appearance")}
                             className={`cursor-pointer w-full text-left px-3 py-2 rounded-md ${activeTab === "appearance" ? "bg-(--primary-container) text-(--on-primary-container)" : "hover:bg-(--surface-container-high)"}`}
@@ -117,6 +126,35 @@ export default function Settings() {
                             <h2 className="text-xl font-semibold">{t("settings.language.title")}</h2>
                             <div className="space-y-4">
                                 <LanguageSelector/>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "keyboard" && (
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-semibold">{t("settings.keyboard.title")}</h2>
+                            <div className="space-y-4">
+                                <div className="p-5 border border-(--outline-variant) rounded-2xl bg-(--surface-container-low) flex items-center justify-between group">
+                                    <div className="space-y-1">
+                                        <div className="font-semibold text-lg flex items-center gap-2">
+                                            <span className="text-(--primary)">⌘</span>
+                                            {t("settings.keyboard.saveNote")}
+                                        </div>
+                                        <p className="text-sm text-(--on-surface-variant)">
+                                            {t("settings.keyboard.useCtrlS")}
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setUseCtrlS(!useCtrlS)}
+                                        className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                                            useCtrlS 
+                                                ? 'bg-(--primary) text-(--on-primary)' 
+                                                : 'bg-(--surface-container-high) text-(--on-surface-variant) border border-(--outline)'
+                                        }`}
+                                    >
+                                        {useCtrlS ? t('common.on') : t('common.off')}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}

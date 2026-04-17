@@ -48,7 +48,10 @@ export function DbProvider({children}) {
                 await loadData(database);
             } catch (e) {
                 console.error("Failed to initialize database:", e);
-                if (mounted) setDbError(e.message || "Failed to connect to database");
+                if (mounted) {
+                    setDbError(e.message || "Failed to connect to database");
+                    setLoading(false); // Ensure we stop loading state
+                }
             } finally {
                 if (mounted) setLoading(false);
             }

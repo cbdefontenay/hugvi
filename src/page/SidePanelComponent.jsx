@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from "react";
+import {Link} from "react-router-dom";
 import {
     handleAddFolderAsync,
     handleCreateNoteAsync,
@@ -10,15 +11,17 @@ import {
     loadFoldersAndNotes,
 } from "../helpers/DbHelpers.js";
 import {useDb} from "../helpers/DbContext.jsx";
+import {useFullscreen} from "../helpers/FullscreenContext.jsx";
 import EditorComponent from "../components/EditorComponent.jsx";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import {useTranslation} from "react-i18next";
-import {FolderPlus, Menu, ChevronLeft, X} from "lucide-react";
+import {FolderPlus, Menu, ChevronLeft, X, House, Settings} from "lucide-react";
 import {FolderList} from "../components/sidebar/FolderList.jsx";
 import {SidebarModals} from "../components/sidebar/SidebarModals.jsx";
 
 export default function SidePanelComponent() {
     const {t} = useTranslation();
+    const {isFullscreen, toggleFullscreen} = useFullscreen();
     const {
         db, setDb,
         folders, setFolders,
@@ -42,7 +45,6 @@ export default function SidePanelComponent() {
     const [noteToModify, setNoteToModify] = useState(null);
     const [newNoteTitle, setNewNoteTitle] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
     const menuRefs = useRef({});
     const fileInputRef = useRef(null);
 
@@ -68,34 +70,6 @@ export default function SidePanelComponent() {
         reader.readAsText(file);
         e.target.value = ''; // Reset input
     };
-
-    // Fullscreen handling logic
-    const toggleFullscreen = () => {
-        if (!isFullscreen) {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
-            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-            else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-            setIsFullscreen(true);
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-            setIsFullscreen(false);
-        }
-    };
-
-    useEffect(() => {
-        const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('msfullscreenchange', handleFullscreenChange);
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-        };
-    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -264,6 +238,7 @@ export default function SidePanelComponent() {
 
     const handleNoteClick = (note) => {
         setActiveNote(note);
+        setIsMobileMenuOpen(false);
     };
 
     const handleSaveNote = async (noteId, newContent) => {
@@ -301,22 +276,30 @@ export default function SidePanelComponent() {
     };
 
     return (
-        <div className={`${isFullscreen ? '' : 'ml-20'} flex h-screen bg-[var(--background)] text-[var(--on-background)] overflow-hidden`}>
+        <div className={`${isFullscreen ? '' : 'md:ml-20'} flex h-screen bg-[var(--background)] text-[var(--on-background)] overflow-hidden`}>
             {/* Mobile Menu Button - Only shows on small screens */}
             <button
-                className="md:hidden fixed top-4 left-4 z-50 bg-(--primary) text-(--on-primary) p-2 rounded-lg"
+                className="md:hidden fixed top-4 left-4 z-[100] bg-(--primary) text-(--on-primary) p-2 rounded-lg shadow-lg"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? t("panel.closeMenu") : t("panel.openMenu")}
             >
                 {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
 
+            {/* Mobile Backdrop */}
+            {isMobileMenuOpen && (
+                <div 
+                    className="md:hidden fixed inset-0 bg-black/40 z-[35] backdrop-blur-[2px] animate-fade-in"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Side Panel */}
             <div
-                className={`ml-20 bg-(--surface-container-low) border-r border-(--outline-variant) flex flex-col fixed h-full transition-all duration-300 ease-in-out ${isFullscreen ? 'z-0 invisible' : 'z-40'}
-                ${isMobileMenuOpen ? "left-0 w-72" : "-left-72"} md:left-0 ${isCollapsed ? 'md:w-16' : 'md:w-72'}`}
+                className={`bg-(--surface-container-low) border-r border-(--outline-variant) flex flex-col fixed h-full transition-all duration-300 ease-in-out ${isFullscreen ? 'z-0 invisible opacity-0' : 'z-40 opacity-100'}
+                ${isMobileMenuOpen ? "left-0 w-[85%] sm:w-80 shadow-2xl" : "-left-full md:left-20"} ${isCollapsed ? 'md:w-16' : 'md:w-72'}`}
             >
-                <div className="p-4 border-b border-(--outline-variant) flex justify-between items-center h-16">
+                <div className="p-3 md:p-4 border-b border-(--outline-variant) flex justify-between items-center h-16">
                     <h2 className={`font-semibold text-(--on-surface) transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 text-lg'}`}>
                         {t("panel.folders")}
                     </h2>
@@ -326,6 +309,20 @@ export default function SidePanelComponent() {
                     >
                         {isCollapsed ? <Menu size={18} /> : <ChevronLeft size={18} />}
                     </button>
+                </div>
+
+                {/* Mobile Navigation Links - Only visible on mobile */}
+                <div className="md:hidden border-b border-(--outline-variant) px-3 py-2">
+                    <div className="space-y-1">
+                        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-(--surface-container-high) transition-colors text-(--on-surface)">
+                            <House size={18} />
+                            <span className="font-medium">{t("navbar.home")}</span>
+                        </Link>
+                        <Link to="/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-(--surface-container-high) transition-colors text-(--on-surface)">
+                            <Settings size={18} />
+                            <span className="font-medium">{t("navbar.settings")}</span>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto overflow-x-hidden thin-scrollbar pb-20">

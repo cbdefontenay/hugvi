@@ -10,23 +10,23 @@ export default function EditorStatusBar({
     const {t} = useTranslation();
 
     return (
-        <div className="px-4 py-2 text-xs flex justify-between items-center bg-(--surface-container-high) border-t border-(--outline-variant) text-(--on-surface-variant)">
-            <div>
+        <div className="px-3 py-2 text-[10px] sm:text-xs flex flex-wrap justify-between items-center bg-(--surface-container-high) border-t border-(--outline-variant) text-(--on-surface-variant) gap-2">
+            <div className="truncate min-w-0">
                 {activeNote?.title && (
-                    <span className="truncate max-w-xs inline-block align-middle font-medium">
+                    <span className="inline-block align-middle font-medium max-w-full truncate">
                         {activeNote.title}
                     </span>
                 )}
             </div>
-            <div className="flex flex-wrap items-center space-x-4">
-                <span className="hidden sm:inline-block">{new Date().toLocaleDateString()}</span>
+            <div className="flex flex-wrap items-center justify-end space-x-2 sm:space-x-4">
+                <span className="hidden md:inline-block">{new Date().toLocaleDateString()}</span>
                 <span>{wordCount} {t("editor.words")}</span>
                 <span className="hidden sm:inline-block">{inputText.length} {t("editor.characters")}</span>
-                <span className="capitalize px-2 py-0.5 rounded-full bg-(--surface-container-highest) font-medium text-(--on-surface)">
+                <span className="capitalize px-1.5 py-0.5 rounded-full bg-(--surface-container-highest) font-medium text-(--on-surface)">
                     {viewMode} {t("editor.mode")}
                 </span>
                 {isFullscreen && (
-                    <span className="text-(--primary) font-medium tracking-wide uppercase text-[10px]">
+                    <span className="text-(--primary) font-medium uppercase">
                         {t("editor.fullscreen")}
                     </span>
                 )}

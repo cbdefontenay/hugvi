@@ -21,7 +21,8 @@
     "keyboard": {
       "title": "Raccourcis clavier",
       "newFolder": "Nouveau dossier",
-      "saveNote": "Enregistrer la note"
+      "saveNote": "Enregistrer la note",
+      "useCtrlS": "Utiliser Ctrl+S pour enregistrer"
     },
     "data": {
       "title": "Gestion des données",
@@ -117,6 +118,8 @@
   },
   "common": {
     "cancel": "Annuler",
-    "close": "Fermer"
+    "close": "Fermer",
+    "on": "Activé",
+    "off": "Désactivé"
   }
 }

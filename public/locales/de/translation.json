@@ -21,7 +21,8 @@
     "keyboard": {
       "title": "Tastenkombinationen",
       "newFolder": "Neuer Ordner",
-      "saveNote": "Notiz speichern"
+      "saveNote": "Notiz speichern",
+      "useCtrlS": "Strg+S zum Speichern verwenden"
     },
     "data": {
       "title": "Datenverwaltung",
@@ -117,6 +118,8 @@
   },
   "common": {
     "cancel": "Abbrechen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "on": "Aktiviert",
+    "off": "Deaktiviert"
   }
 }

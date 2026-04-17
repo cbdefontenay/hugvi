@@ -1,25 +1,12 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {Link, Outlet} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {useFullscreen} from "../helpers/FullscreenContext.jsx";
 
 export default function NavBarComponent() {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const {isFullscreen} = useFullscreen();
     const {t} = useTranslation();
-
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('msfullscreenchange', handleFullscreenChange);
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-        };
-    }, []);
 
     // Toggle sidebar on mobile
     const toggleSidebar = () => {
@@ -73,29 +60,7 @@ export default function NavBarComponent() {
 
     return (
         <>
-            {/* Mobile toggle button */}
-            <button
-                onClick={toggleSidebar}
-                className="fixed md:hidden bottom-4 left-4 z-50 p-3 rounded-full bg-(--primary) text-(--on-primary) shadow-lg"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <line x1="3" y1="12" x2="21" y2="12"/>
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
-            </button>
-
-            {/* Sidebar */}
+            {/* Sidebar - hidden on mobile, only visible on desktop */}
             <aside
                 className={`
         fixed top-0 left-0 h-full z-20
@@ -104,6 +69,7 @@ export default function NavBarComponent() {
         ${isExpanded ? "w-64" : "w-20"}
         ${isExpanded ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         ${isFullscreen ? "hidden" : "block"}
+        md:block hidden
       `}
             >
                 <nav className="h-full flex flex-col pt-6">
@@ -141,14 +107,23 @@ export default function NavBarComponent() {
                 </nav>
             </aside>
 
-            {/* Overlay for mobile */}
-            {isExpanded && (
-                <div
-                    onClick={toggleSidebar}
-                    className="fixed inset-0 bg-black/50 z-30 md:hidden"
-                />
-            )}
-            <main className="">
+            {/* Mobile Bottom Navigation Bar - only visible on small screens */}
+            <nav className="fixed bottom-0 left-0 right-0 h-16 bg-(--surface-container-lowest) border-t border-(--outline-variant) z-50 flex items-center justify-around md:hidden pb-safe">
+                {navItems.map((item) => (
+                    <Link
+                        key={item.nameKey}
+                        to={item.path}
+                        className="flex flex-col items-center justify-center space-y-1 w-full h-full text-(--on-surface-variant) hover:text-(--primary) transition-colors"
+                    >
+                        <div className="flex items-center justify-center p-1 rounded-full transition-colors active:bg-(--surface-container-high)">
+                            {item.icon}
+                        </div>
+                        <span className="text-[10px] font-medium uppercase tracking-wider">{t(item.nameKey)}</span>
+                    </Link>
+                ))}
+            </nav>
+
+            <main className="pb-16 md:pb-0">
                 <Outlet/>
             </main>
         </>

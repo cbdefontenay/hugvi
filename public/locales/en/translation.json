@@ -21,7 +21,8 @@
     "keyboard": {
       "title": "Keyboard Shortcuts",
       "newFolder": "New Folder",
-      "saveNote": "Save Note"
+      "saveNote": "Save Note",
+      "useCtrlS": "Use Ctrl+S to save"
     },
     "data": {
       "title": "Data Management",
@@ -117,6 +118,8 @@
   },
   "common": {
     "cancel": "Cancel",
-    "close": "Close"
+    "close": "Close",
+    "on": "On",
+    "off": "Off"
   }
 }
