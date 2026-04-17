@@ -30,13 +30,14 @@ export default function MarkdownSyntaxOverlay({
                 highlight={highlightWithPrism}
                 padding={20}
                 style={{
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
+                    fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                    fontSize: '14px',
+                    lineHeight: '1.5',
                     minHeight: '100%',
                     backgroundColor: 'transparent',
                     color: 'var(--on-surface)',
                 }}
-                textareaClassName="focus:outline-none caret-(--primary)"
+                textareaClassName="focus:outline-none caret-(--primary) outline-none"
                 placeholder={placeholder}
             />
         </div>
