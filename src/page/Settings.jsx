@@ -307,7 +307,6 @@ export default function Settings() {
                                     </div>
                                     <div>
                                         <h3 className="font-medium text-lg">Hugvi</h3>
-                                        <p className="text-sm text-[var(--on-surface-variant)]">Version 1.3.0</p>
                                     </div>
                                 </div>
                                 <div className="text-justify">
