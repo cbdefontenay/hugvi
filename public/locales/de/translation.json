@@ -6,14 +6,27 @@
       "language": "Sprachen",
       "keyboard": "Tastenkombinationen",
       "data": "Datenverwaltung",
-      "about": "Über"
+      "about": "Über",
+      "updates": "Updates"
     },
     "appearance": {
       "title": "Darstellung",
       "darkMode": "Dunkelmodus",
       "description": "Zwischen hellem und dunklem Thema wechseln",
       "appTheme": "App-Thema",
-      "themeDescription": "Wählen Sie Ihr bevorzugtes App-Thema"
+      "themeDescription": "Wählen Sie Ihr bevorzugtes App-Thema",
+      "themes": {
+        "light": "Hell",
+        "dark": "Dunkel",
+        "sepia": "Sepia",
+        "ocean": "Ozean",
+        "hacker-dark": "Hacker Dunkel",
+        "hacker-light": "Hacker Hell",
+        "midnight-blue": "Mitternachtsblau",
+        "rose-gold-dark": "Roségold Dunkel",
+        "forest-dark": "Wald Dunkel",
+        "peach-light": "Pfirsich Hell"
+      }
     },
     "language": {
       "title": "Sprache ändern"
@@ -38,6 +51,25 @@
       "resetConfirm": "Sind Sie SICHER, dass Sie ALLES löschen möchten? Dies kann nicht rückgängig gemacht werden.",
       "resetSuccess": "Alle Daten wurden gelöscht.",
       "resetError": "Datenlöschung fehlgeschlagen."
+    },
+    "updates": {
+      "title": "Updates",
+      "description": "Prüfen, ob eine neue Version von Hugvi verfügbar ist",
+      "checkTitle": "Nach Updates suchen",
+      "checkDesc": "Vergleichen Sie Ihre Version mit der neuesten Version auf GitHub",
+      "checkButton": "Nach Updates suchen",
+      "checking": "Prüfen...",
+      "checkError": "Fehler beim Prüfen auf Updates. Bitte überprüfen Sie Ihre Internetverbindung.",
+      "available": "Ein Update ist verfügbar!",
+      "currentVersion": "Aktuelle Version",
+      "latestVersion": "Neueste Version",
+      "downloadButton": "Update herunterladen",
+      "downloading": "Herunterladen...",
+      "downloadComplete": "Download abgeschlossen!",
+      "downloadError": "Download fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung.",
+      "installInstructions": "Führen Sie die heruntergeladene .AppImage-Datei aus, um das Update zu installieren.",
+      "openReleases": "Release-Seite",
+      "upToDate": "Hugvi ist auf dem neuesten Stand!"
     },
     "about": {
       "title": "Über",

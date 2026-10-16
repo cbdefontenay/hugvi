@@ -1,0 +1,120 @@
+:root.peach-light {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(255 248 240);
+    --editor-text: rgb(50 40 35);
+    --editor-caret: rgb(255 120 60);
+    --editor-selection-bg: rgb(255 210 180);
+    --editor-selection-text: rgb(60 25 0);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(255 250 245);
+    --preview-text: rgb(50 40 35);
+    --preview-heading: rgb(35 28 25);
+    --preview-link: rgb(255 120 60);
+    --preview-code-bg: rgb(255 235 220);
+    --preview-code-text: rgb(80 40 15);
+    --preview-blockquote-border: rgb(255 120 60);
+    --preview-blockquote-text: rgb(60 45 38);
+    --preview-strong: rgb(255 120 60);
+    --preview-em: rgb(230 100 40);
+    --preview-list-marker: rgb(255 120 60);
+    --preview-table-border: rgb(235 210 195);
+    --preview-table-header-bg: rgb(255 235 220);
+    --preview-table-header-text: rgb(60 25 0);
+    --preview-hr: rgb(235 210 195);
+
+    --primary: rgb(255 120 60);
+    --surface-tint: rgb(255 120 60);
+    --on-primary: rgb(255 255 255);
+    --primary-container: rgb(255 225 200);
+    --on-primary-container: rgb(100 45 10);
+    --secondary: rgb(230 100 40);
+    --on-secondary: rgb(255 255 255);
+    --secondary-container: rgb(255 220 190);
+    --on-secondary-container: rgb(90 40 5);
+    --tertiary: rgb(180 120 80);
+    --on-tertiary: rgb(255 255 255);
+    --tertiary-container: rgb(255 215 190);
+    --on-tertiary-container: rgb(80 50 25);
+    --error: rgb(200 30 30);
+    --on-error: rgb(255 255 255);
+    --error-container: rgb(255 210 205);
+    --on-error-container: rgb(150 0 5);
+    --background: rgb(255 248 240);
+    --on-background: rgb(35 28 25);
+    --surface: rgb(255 248 240);
+    --on-surface: rgb(35 28 25);
+    --surface-variant: rgb(240 220 205);
+    --on-surface-variant: rgb(80 65 55);
+    --outline: rgb(140 120 105);
+    --outline-variant: rgb(220 200 185);
+    --shadow: rgb(0 0 0);
+    --scrim: rgb(0 0 0);
+    --inverse-surface: rgb(55 45 40);
+    --inverse-on-surface: rgb(255 235 220);
+    --inverse-primary: rgb(255 200 160);
+    --primary-fixed: rgb(255 225 200);
+    --on-primary-fixed: rgb(60 25 0);
+    --primary-fixed-dim: rgb(255 180 130);
+    --on-primary-fixed-variant: rgb(100 45 10);
+    --secondary-fixed: rgb(255 220 190);
+    --on-secondary-fixed: rgb(60 25 0);
+    --secondary-fixed-dim: rgb(230 100 40);
+    --on-secondary-fixed-variant: rgb(90 40 5);
+    --tertiary-fixed: rgb(255 215 190);
+    --on-tertiary-fixed: rgb(50 30 10);
+    --tertiary-fixed-dim: rgb(240 180 140);
+    --on-tertiary-fixed-variant: rgb(80 50 25);
+    --surface-dim: rgb(235 220 205);
+    --surface-bright: rgb(255 248 240);
+    --surface-container-lowest: rgb(255 255 255);
+    --surface-container-low: rgb(255 245 235);
+    --surface-container: rgb(255 238 225);
+    --surface-container-high: rgb(250 232 218);
+    --surface-container-highest: rgb(240 220 205);
+}
+
+/* Peach Light theme editor overrides */
+html.peach-light .editor-area > div:last-child,
+html.peach-light .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.peach-light .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.peach-light .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
+}
+
+html, body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--surface-container-high);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--outline-variant);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--outline);
+}

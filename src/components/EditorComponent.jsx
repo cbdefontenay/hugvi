@@ -180,7 +180,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
             <div className={`select-text flex-1 overflow-hidden flex flex-col md:flex-row`}>
                 {/* Editor Panel - Show in edit mode or split mode */}
                 {(viewMode === VIEW_MODES.EDIT || viewMode === VIEW_MODES.SPLIT) && (
-                    <div className={`${viewMode === VIEW_MODES.SPLIT ? 'flex-1 min-h-[50%] md:min-h-0' : 'flex-1'} h-full flex flex-col border-b md:border-b-0 md:border-r border-(--outline-variant)`}>
+                    <div className={`editor-area ${viewMode === VIEW_MODES.SPLIT ? 'flex-1 min-h-[50%] md:min-h-0' : 'flex-1'} h-full flex flex-col border-b md:border-b-0 md:border-r border-(--outline-variant)`}>
                         <div
                             className="p-2 bg-(--surface-container) border-b border-(--outline-variant) flex items-center justify-between">
                             <span className="select-none text-xs font-medium text-(--on-surface-variant)">
@@ -225,7 +225,7 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                             )}
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-(--surface-container-high)">
+                        <div className="preview-area flex-1 overflow-y-auto p-4 md:p-6" style={{ backgroundColor: 'var(--preview-bg)' }}>
                             <Markdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -251,7 +251,8 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
 
                                         return (
                                             <code
-                                                className="bg-(--surface-container-high) text-(--on-surface-container-high) px-1.5 py-0.5 rounded text-sm font-mono border border-(--outline)/30 break-words max-w-full"
+                                                className="px-1.5 py-0.5 rounded text-sm font-mono border break-words max-w-full"
+                                                style={{ backgroundColor: 'var(--preview-code-bg)', color: 'var(--preview-code-text)', borderColor: 'var(--preview-table-border)' }}
                                                 {...props}
                                             >
                                                 {children}
@@ -259,28 +260,27 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                                         );
                                     },
 
-                                    // ... (keep all your other Markdown components as before)
-                                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-(--on-surface) pb-2 mb-3 mt-4" {...props} />,
-                                    h2: ({node, ...props}) => <h2 className="text-xl font-bold text-(--on-surface) pb-1 mb-2 mt-3" {...props} />,
-                                    h3: ({node, ...props}) => <h3 className="text-lg font-bold text-(--on-surface) mb-1 mt-2" {...props} />,
-                                    h4: ({node, ...props}) => <h4 className="text-base font-bold text-(--on-surface) mb-1 mt-2" {...props} />,
-                                    p: ({node, ...props}) => <p className="text-(--on-surface) leading-relaxed mb-3 text-sm" {...props} />,
-                                    a: ({node, ...props}) => <a className="text-(--primary) hover:text-(--secondary) transition-colors duration-200 font-medium underline text-sm" {...props} />,
-                                    blockquote: ({node, ...props}) => <blockquote className="border-l-3 border-(--primary) pl-3 py-1 my-3 bg-(--surface-container) text-(--on-surface-container) not-italic rounded-r text-sm" {...props} />,
-                                    ul: ({node, ...props}) => <ul className="text-(--on-surface) leading-6 mb-3 list-disc list-inside text-sm" {...props} />,
-                                    ol: ({node, ...props}) => <ol className="text-(--on-surface) leading-6 mb-3 list-decimal list-inside text-sm" {...props} />,
+                                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold pb-2 mb-3 mt-4" style={{ color: 'var(--preview-heading)' }} {...props} />,
+                                    h2: ({node, ...props}) => <h2 className="text-xl font-bold pb-1 mb-2 mt-3" style={{ color: 'var(--preview-heading)' }} {...props} />,
+                                    h3: ({node, ...props}) => <h3 className="text-lg font-bold mb-1 mt-2" style={{ color: 'var(--preview-heading)' }} {...props} />,
+                                    h4: ({node, ...props}) => <h4 className="text-base font-bold mb-1 mt-2" style={{ color: 'var(--preview-heading)' }} {...props} />,
+                                    p: ({node, ...props}) => <p className="leading-relaxed mb-3 text-sm" style={{ color: 'var(--preview-text)' }} {...props} />,
+                                    a: ({node, ...props}) => <a className="hover:opacity-80 transition-colors duration-200 font-medium underline text-sm" style={{ color: 'var(--preview-link)' }} {...props} />,
+                                    blockquote: ({node, ...props}) => <blockquote className="border-l-3 pl-3 py-1 my-3 not-italic rounded-r text-sm" style={{ borderColor: 'var(--preview-blockquote-border)', color: 'var(--preview-blockquote-text)' }} {...props} />,
+                                    ul: ({node, ...props}) => <ul className="leading-6 mb-3 list-disc list-inside text-sm" style={{ color: 'var(--preview-text)' }} {...props} />,
+                                    ol: ({node, ...props}) => <ol className="leading-6 mb-3 list-decimal list-inside text-sm" style={{ color: 'var(--preview-text)' }} {...props} />,
                                     li: ({node, children, ...props}) => {
                                         const taskListItem = node?.children?.[0]?.type === 'element' && node?.children?.[0]?.tagName === 'input';
 
                                         if (taskListItem) {
                                             return (
-                                                <li className="flex items-start gap-2 list-none ml-0 my-1" {...props}>
+                                                <li className="flex items-start gap-2 list-none ml-0 my-1" style={{ color: 'var(--preview-text)' }} {...props}>
                                                     {children}
                                                 </li>
                                             );
                                         }
 
-                                        return <li className="text-(--on-surface) marker:text-(--primary) my-1" {...props}>{children}</li>;
+                                        return <li className="my-1" style={{ color: 'var(--preview-text)', '--marker-color': 'var(--preview-list-marker)' }} {...props}>{children}</li>;
                                     },
                                     input: ({node, checked, ...props}) => {
                                         if (props.type === "checkbox") {
@@ -300,24 +300,24 @@ export default function EditorComponent({activeNote, onSaveNote, onCloseNote, is
                                         }
                                         return <input {...props} />;
                                     },
-                                    strong: ({node, ...props}) => <strong className="text-(--primary) font-bold" {...props} />,
-                                    em: ({node, ...props}) => <em className="text-(--secondary) italic" {...props} />,
+                                    strong: ({node, ...props}) => <strong className="font-bold" style={{ color: 'var(--preview-strong)' }} {...props} />,
+                                    em: ({node, ...props}) => <em className="italic" style={{ color: 'var(--preview-em)' }} {...props} />,
                                     table: ({node, ...props}) => (
-                                        <div className="overflow-x-auto my-3 border border-(--outline) rounded text-xs">
+                                        <div className="overflow-x-auto my-3 border rounded text-xs" style={{ borderColor: 'var(--preview-table-border)' }}>
                                             <table className="w-full border-collapse" {...props} />
                                         </div>
                                     ),
                                     th: ({node, ...props}) => (
-                                        <th className="bg-(--surface-container-high) text-(--on-surface-container-high) px-3 py-2 border-b border-(--outline) font-semibold text-left text-xs" {...props} />
+                                        <th className="px-3 py-2 border-b font-semibold text-left text-xs" style={{ backgroundColor: 'var(--preview-table-header-bg)', color: 'var(--preview-table-header-text)', borderColor: 'var(--preview-table-border)' }} {...props} />
                                     ),
                                     td: ({node, ...props}) => (
-                                        <td className="px-3 py-2 border-b border-(--outline) text-(--on-surface) text-xs" {...props} />
+                                        <td className="px-3 py-2 border-b text-xs" style={{ color: 'var(--preview-text)', borderColor: 'var(--preview-table-border)' }} {...props} />
                                     ),
                                     hr: ({node, ...props}) => (
-                                        <hr className="my-4 border-t border-(--outline) opacity-30" {...props} />
+                                        <hr className="my-4 border-t opacity-30" style={{ borderColor: 'var(--preview-hr)' }} {...props} />
                                     ),
                                     img: ({node, ...props}) => (
-                                        <img className="rounded-lg border border-(--outline-variant) max-w-full h-auto my-4 shadow-sm" {...props} />
+                                        <img className="rounded-lg border max-w-full h-auto my-4 shadow-sm" style={{ borderColor: 'var(--preview-table-border)' }} {...props} />
                                     ),
                                 }}
                             >

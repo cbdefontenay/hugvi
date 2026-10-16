@@ -1,0 +1,120 @@
+:root.rose-gold-dark {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(35 28 30);
+    --editor-text: rgb(225 215 215);
+    --editor-caret: rgb(255 150 170);
+    --editor-selection-bg: rgb(80 40 50);
+    --editor-selection-text: rgb(255 220 225);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(28 22 25);
+    --preview-text: rgb(210 200 200);
+    --preview-heading: rgb(235 225 225);
+    --preview-link: rgb(255 150 170);
+    --preview-code-bg: rgb(45 35 40);
+    --preview-code-text: rgb(240 210 215);
+    --preview-blockquote-border: rgb(255 150 170);
+    --preview-blockquote-text: rgb(195 185 185);
+    --preview-strong: rgb(255 150 170);
+    --preview-em: rgb(255 180 200);
+    --preview-list-marker: rgb(255 150 170);
+    --preview-table-border: rgb(60 50 55);
+    --preview-table-header-bg: rgb(45 35 40);
+    --preview-table-header-text: rgb(235 225 225);
+    --preview-hr: rgb(60 50 55);
+
+    --primary: rgb(255 150 170);
+    --surface-tint: rgb(255 150 170);
+    --on-primary: rgb(80 20 35);
+    --primary-container: rgb(90 35 50);
+    --on-primary-container: rgb(255 210 220);
+    --secondary: rgb(255 180 200);
+    --on-secondary: rgb(80 20 35);
+    --secondary-container: rgb(95 40 55);
+    --on-secondary-container: rgb(255 215 225);
+    --tertiary: rgb(200 180 255);
+    --on-tertiary: rgb(40 30 70);
+    --tertiary-container: rgb(60 50 100);
+    --on-tertiary-container: rgb(225 215 255);
+    --error: rgb(255 140 140);
+    --on-error: rgb(80 0 0);
+    --error-container: rgb(100 20 20);
+    --on-error-container: rgb(255 200 200);
+    --background: rgb(20 15 18);
+    --on-background: rgb(235 225 225);
+    --surface: rgb(20 15 18);
+    --on-surface: rgb(235 225 225);
+    --surface-variant: rgb(55 45 50);
+    --on-surface-variant: rgb(190 175 180);
+    --outline: rgb(100 85 90);
+    --outline-variant: rgb(55 45 50);
+    --shadow: rgb(0 0 0);
+    --scrim: rgb(0 0 0);
+    --inverse-surface: rgb(235 225 225);
+    --inverse-on-surface: rgb(40 30 35);
+    --inverse-primary: rgb(180 80 100);
+    --primary-fixed: rgb(255 210 220);
+    --on-primary-fixed: rgb(60 15 25);
+    --primary-fixed-dim: rgb(255 150 170);
+    --on-primary-fixed-variant: rgb(90 35 50);
+    --secondary-fixed: rgb(255 215 225);
+    --on-secondary-fixed: rgb(60 15 25);
+    --secondary-fixed-dim: rgb(255 180 200);
+    --on-secondary-fixed-variant: rgb(95 40 55);
+    --tertiary-fixed: rgb(225 215 255);
+    --on-tertiary-fixed: rgb(30 20 60);
+    --tertiary-fixed-dim: rgb(200 180 255);
+    --on-tertiary-fixed-variant: rgb(60 50 100);
+    --surface-dim: rgb(20 15 18);
+    --surface-bright: rgb(55 45 50);
+    --surface-container-lowest: rgb(15 10 14);
+    --surface-container-low: rgb(28 22 25);
+    --surface-container: rgb(33 26 30);
+    --surface-container-high: rgb(42 34 38);
+    --surface-container-highest: rgb(55 45 50);
+}
+
+/* Rose Gold Dark theme editor overrides */
+html.rose-gold-dark .editor-area > div:last-child,
+html.rose-gold-dark .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.rose-gold-dark .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.rose-gold-dark .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
+}
+
+html, body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--surface-container-high);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--outline-variant);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--outline);
+}

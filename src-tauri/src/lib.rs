@@ -1,8 +1,10 @@
 mod db;
 mod file_export;
+mod updater;
 
 use crate::db::sqlite_migrations;
 use crate::file_export::export_note;
+use crate::updater::{check_for_updates, download_update};
 use tauri_plugin_sql::Builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -14,7 +16,7 @@ pub fn run() {
                 .add_migrations("sqlite:app.db", sqlite_migrations())
                 .build(),
         )
-        .invoke_handler(tauri::generate_handler![export_note])
+        .invoke_handler(tauri::generate_handler![export_note, check_for_updates, download_update])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

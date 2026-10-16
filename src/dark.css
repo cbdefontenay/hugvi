@@ -1,4 +1,28 @@
 :root.dark {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(30 30 30);
+    --editor-text: rgb(220 220 220);
+    --editor-caret: rgb(211 188 253);
+    --editor-selection-bg: rgb(80 61 116);
+    --editor-selection-text: rgb(235 221 255);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(29 27 32);
+    --preview-text: rgb(220 220 220);
+    --preview-heading: rgb(231 224 232);
+    --preview-link: rgb(211 188 253);
+    --preview-code-bg: rgb(44 41 47);
+    --preview-code-text: rgb(235 221 255);
+    --preview-blockquote-border: rgb(211 188 253);
+    --preview-blockquote-text: rgb(203 196 207);
+    --preview-strong: rgb(211 188 253);
+    --preview-em: rgb(211 188 253);
+    --preview-list-marker: rgb(211 188 253);
+    --preview-table-border: rgb(73 69 78);
+    --preview-table-header-bg: rgb(44 41 47);
+    --preview-table-header-text: rgb(231 224 232);
+    --preview-hr: rgb(73 69 78);
+
     --primary: rgb(211 188 253);
     --surface-tint: rgb(211 188 253);
     --on-primary: rgb(57 38 92);
@@ -48,6 +72,23 @@
     --surface-container: rgb(33 31 36);
     --surface-container-high: rgb(44 41 47);
     --surface-container-highest: rgb(54 52 58);
+}
+
+/* Dark theme editor overrides */
+html.dark .editor-area > div:last-child,
+html.dark .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.dark .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.dark .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
 }
 
 html, body {

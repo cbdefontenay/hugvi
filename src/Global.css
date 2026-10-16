@@ -3,6 +3,30 @@
 @plugin "daisyui";
 
 :root {
+  /* Editor neutral colors — distinct from the app theme */
+  --editor-bg: rgb(250 250 250);
+  --editor-text: rgb(38 38 38);
+  --editor-caret: rgb(104 84 142);
+  --editor-selection-bg: rgb(211 188 253);
+  --editor-selection-text: rgb(35 15 70);
+
+  /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+  --preview-bg: rgb(250 250 250);
+  --preview-text: rgb(38 38 38);
+  --preview-heading: rgb(29 27 32);
+  --preview-link: rgb(104 84 142);
+  --preview-code-bg: rgb(242 236 244);
+  --preview-code-text: rgb(80 61 116);
+  --preview-blockquote-border: rgb(104 84 142);
+  --preview-blockquote-text: rgb(58 54 64);
+  --preview-strong: rgb(104 84 142);
+  --preview-em: rgb(104 84 141);
+  --preview-list-marker: rgb(104 84 142);
+  --preview-table-border: rgb(203 196 207);
+  --preview-table-header-bg: rgb(237 230 238);
+  --preview-table-header-text: rgb(58 54 64);
+  --preview-hr: rgb(203 196 207);
+
   --primary: rgb(104 84 142);
   --surface-tint: rgb(104 84 142);
   --on-primary: rgb(255 255 255);
@@ -52,6 +76,27 @@
   --surface-container: rgb(242 236 244);
   --surface-container-high: rgb(237 230 238);
   --surface-container-highest: rgb(231 224 232);
+}
+
+/* Light theme editor overrides */
+html.light .editor-area > div:last-child,
+html.light .editor-area > .editor-area,
+html:not(.dark):not(.sepia):not(.ocean):not(.hacker-dark):not(.hacker-light):not(.midnight-blue):not(.rose-gold-dark):not(.forest-dark):not(.peach-light) .editor-area > div:last-child,
+html:not(.dark):not(.sepia):not(.ocean):not(.hacker-dark):not(.hacker-light):not(.midnight-blue):not(.rose-gold-dark):not(.forest-dark):not(.peach-light) .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.light .editor-area textarea,
+html:not(.dark):not(.sepia):not(.ocean):not(.hacker-dark):not(.hacker-light):not(.midnight-blue):not(.rose-gold-dark):not(.forest-dark):not(.peach-light) .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.light .editor-area ::selection,
+html:not(.dark):not(.sepia):not(.ocean):not(.hacker-dark):not(.hacker-light):not(.midnight-blue):not(.rose-gold-dark):not(.forest-dark):not(.peach-light) .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
 }
 
 html,

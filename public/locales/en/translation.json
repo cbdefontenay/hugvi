@@ -6,14 +6,27 @@
       "language": "Languages",
       "keyboard": "Keyboard Shortcuts",
       "data": "Data Management",
-      "about": "About"
+      "about": "About",
+      "updates": "Updates"
     },
     "appearance": {
       "title": "Appearance",
       "darkMode": "Dark Mode",
       "description": "Switch between light and dark theme",
       "appTheme": "App Theme",
-      "themeDescription": "Choose your preferred application theme"
+      "themeDescription": "Choose your preferred application theme",
+      "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "sepia": "Sepia",
+        "ocean": "Ocean",
+        "hacker-dark": "Hacker Dark",
+        "hacker-light": "Hacker Light",
+        "midnight-blue": "Midnight Blue",
+        "rose-gold-dark": "Rose Gold Dark",
+        "forest-dark": "Forest Dark",
+        "peach-light": "Peach Light"
+      }
     },
     "language": {
       "title": "Change the language"
@@ -38,6 +51,25 @@
       "resetConfirm": "Are you SURE you want to delete EVERYTHING? This cannot be undone.",
       "resetSuccess": "All data has been wiped.",
       "resetError": "Failed to wipe data."
+    },
+    "updates": {
+      "title": "Updates",
+      "description": "Check if a new version of Hugvi is available",
+      "checkTitle": "Check for Updates",
+      "checkDesc": "Compare your version with the latest version on GitHub",
+      "checkButton": "Check for Updates",
+      "checking": "Checking...",
+      "checkError": "Failed to check for updates. Please check your internet connection.",
+      "available": "An update is available!",
+      "currentVersion": "Current version",
+      "latestVersion": "Latest version",
+      "downloadButton": "Download Update",
+      "downloading": "Downloading...",
+      "downloadComplete": "Download complete!",
+      "downloadError": "Failed to download. Please check your internet connection.",
+      "installInstructions": "Run the downloaded .AppImage file to install the update.",
+      "openReleases": "Releases page",
+      "upToDate": "Hugvi is up to date!"
     },
     "about": {
       "title": "About",

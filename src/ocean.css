@@ -1,4 +1,28 @@
 :root.ocean {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(20 28 40);
+    --editor-text: rgb(210 215 220);
+    --editor-caret: rgb(138 180 248);
+    --editor-selection-bg: rgb(59 90 144);
+    --editor-selection-text: rgb(210 227 252);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(23 32 48);
+    --preview-text: rgb(200 205 210);
+    --preview-heading: rgb(232 234 237);
+    --preview-link: rgb(138 180 248);
+    --preview-code-bg: rgb(39 52 74);
+    --preview-code-text: rgb(210 227 252);
+    --preview-blockquote-border: rgb(138 180 248);
+    --preview-blockquote-text: rgb(180 185 190);
+    --preview-strong: rgb(138 180 248);
+    --preview-em: rgb(129 201 149);
+    --preview-list-marker: rgb(138 180 248);
+    --preview-table-border: rgb(60 64 67);
+    --preview-table-header-bg: rgb(39 52 74);
+    --preview-table-header-text: rgb(232 234 237);
+    --preview-hr: rgb(60 64 67);
+
     --primary: rgb(138 180 248);
     --surface-tint: rgb(138 180 248);
     --on-primary: rgb(23 43 77);
@@ -48,4 +72,21 @@
     --surface-container: rgb(30 41 59);
     --surface-container-high: rgb(39 52 74);
     --surface-container-highest: rgb(51 65 85);
+}
+
+/* Ocean theme editor overrides */
+html.ocean .editor-area > div:last-child,
+html.ocean .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.ocean .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.ocean .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
 }

@@ -1,0 +1,130 @@
+:root.hacker-dark {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(25 25 25);
+    --editor-text: rgb(210 210 210);
+    --editor-caret: rgb(57 255 20);
+    --editor-selection-bg: rgb(50 50 50);
+    --editor-selection-text: rgb(255 255 255);
+
+    /* Preview neutral colors — body text is neutral gray, headings/links/code are themed green */
+    --preview-bg: rgb(15 15 15);
+    --preview-text: rgb(180 180 180);
+    --preview-heading: rgb(220 220 220);
+    --preview-link: rgb(57 255 20);
+    --preview-code-bg: rgb(25 25 25);
+    --preview-code-text: rgb(200 200 200);
+    --preview-blockquote-border: rgb(57 255 20);
+    --preview-blockquote-text: rgb(160 160 160);
+    --preview-strong: rgb(57 255 20);
+    --preview-em: rgb(0 255 65);
+    --preview-list-marker: rgb(57 255 20);
+    --preview-table-border: rgb(0 80 0);
+    --preview-table-header-bg: rgb(25 25 25);
+    --preview-table-header-text: rgb(220 220 220);
+    --preview-hr: rgb(0 80 0);
+
+    --primary: rgb(57 255 20);
+    --surface-tint: rgb(57 255 20);
+    --on-primary: rgb(0 20 0);
+    --primary-container: rgb(0 60 0);
+    --on-primary-container: rgb(57 255 20);
+    --secondary: rgb(0 255 65);
+    --on-secondary: rgb(0 20 5);
+    --secondary-container: rgb(0 50 15);
+    --on-secondary-container: rgb(0 255 65);
+    --tertiary: rgb(120 255 120);
+    --on-tertiary: rgb(0 30 0);
+    --tertiary-container: rgb(0 70 0);
+    --on-tertiary-container: rgb(120 255 120);
+    --error: rgb(255 60 60);
+    --on-error: rgb(0 20 20);
+    --error-container: rgb(80 0 0);
+    --on-error-container: rgb(255 60 60);
+    --background: rgb(5 5 5);
+    --on-background: rgb(57 255 20);
+    --surface: rgb(10 10 10);
+    --on-surface: rgb(57 255 20);
+    --surface-variant: rgb(20 30 20);
+    --on-surface-variant: rgb(0 200 50);
+    --outline: rgb(0 150 0);
+    --outline-variant: rgb(0 80 0);
+    --shadow: rgb(0 255 0);
+    --scrim: rgb(0 0 0);
+    --inverse-surface: rgb(57 255 20);
+    --inverse-on-surface: rgb(0 10 0);
+    --inverse-primary: rgb(0 100 0);
+    --primary-fixed: rgb(0 60 0);
+    --on-primary-fixed: rgb(57 255 20);
+    --primary-fixed-dim: rgb(0 80 0);
+    --on-primary-fixed-variant: rgb(0 150 0);
+    --secondary-fixed: rgb(0 50 15);
+    --on-secondary-fixed: rgb(0 255 65);
+    --secondary-fixed-dim: rgb(0 70 20);
+    --on-secondary-fixed-variant: rgb(0 200 50);
+    --tertiary-fixed: rgb(0 70 0);
+    --on-tertiary-fixed: rgb(120 255 120);
+    --tertiary-fixed-dim: rgb(0 90 0);
+    --on-tertiary-fixed-variant: rgb(80 200 80);
+    --surface-dim: rgb(5 5 5);
+    --surface-bright: rgb(25 35 25);
+    --surface-container-lowest: rgb(0 5 0);
+    --surface-container-low: rgb(8 12 8);
+    --surface-container: rgb(12 18 12);
+    --surface-container-high: rgb(18 25 18);
+    --surface-container-highest: rgb(25 35 25);
+}
+
+html.hacker-dark, body.hacker-dark {
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+/* Terminal-style glow effect for hacker dark theme */
+html.hacker-dark ::selection {
+    background-color: var(--primary);
+    color: var(--on-primary);
+    text-shadow: 0 0 5px var(--primary);
+}
+
+html.hacker-dark textarea:focus {
+    text-shadow: 0 0 2px var(--primary);
+}
+
+/* Scrollbar styles for hacker dark */
+html.hacker-dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html.hacker-dark ::-webkit-scrollbar-track {
+    background-color: var(--surface-container-high);
+    border-radius: 4px;
+}
+
+html.hacker-dark ::-webkit-scrollbar-thumb {
+    background-color: var(--outline-variant);
+    border-radius: 4px;
+}
+
+html.hacker-dark ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--outline);
+}
+
+/* Hacker dark theme editor overrides */
+html.hacker-dark .editor-area > div:last-child,
+html.hacker-dark .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.hacker-dark .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+    text-shadow: none !important;
+}
+
+html.hacker-dark .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
+    text-shadow: none !important;
+}

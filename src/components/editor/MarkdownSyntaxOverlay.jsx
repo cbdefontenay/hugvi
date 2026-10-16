@@ -1,44 +1,24 @@
-import React, {useCallback} from 'react';
-import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-markdown';
-import 'prismjs/themes/prism.css'; // Minimal default styling
+import React from 'react';
 
 export default function MarkdownSyntaxOverlay({
     value,
     onChange,
     placeholder
 }) {
-    const highlightWithPrism = useCallback((code) => {
-        try {
-            if (!code) return "";
-            if (!Prism.languages.markdown) {
-                return code;
-            }
-            return Prism.highlight(code, Prism.languages.markdown, 'markdown');
-        } catch (e) {
-            console.error("Prism highlighting error:", e);
-            return code;
-        }
-    }, []);
-
     return (
-        <div className="flex-1 w-full h-full overflow-y-auto thin-scrollbar">
-            <Editor
+        <div className="editor-area flex-1 w-full h-full overflow-y-auto thin-scrollbar">
+            <textarea
                 value={value}
-                onValueChange={onChange}
-                highlight={highlightWithPrism}
-                padding={20}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                spellCheck={false}
+                className="w-full h-full resize-none outline-none p-5 font-mono text-[14px] leading-[1.5] bg-transparent"
                 style={{
                     fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                    fontSize: '14px',
-                    lineHeight: '1.5',
                     minHeight: '100%',
-                    backgroundColor: 'transparent',
-                    color: 'var(--on-surface)',
+                    color: 'var(--editor-text)',
+                    caretColor: 'var(--editor-caret)',
                 }}
-                textareaClassName="focus:outline-none caret-(--primary) outline-none"
-                placeholder={placeholder}
             />
         </div>
     );

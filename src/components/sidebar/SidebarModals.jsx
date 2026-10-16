@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {X} from "lucide-react";
+import {X, FolderPlus, FilePlus, Edit, Trash2, AlertTriangle} from "lucide-react";
 
 export function SidebarModals({
     isFolderModalOpen,
@@ -31,14 +31,25 @@ export function SidebarModals({
         <>
             {/* Folder Creation Modal */}
             {isFolderModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-(--on-surface)">
-                                {t("panel.createFolder")}
-                            </h3>
-                            <button onClick={() => setIsFolderModalOpen(false)} className="text-(--on-surface-variant) hover:text-(--on-surface)">
-                                <X size={20} />
+                <div 
+                    className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsFolderModalOpen(false); }}
+                >
+                    <div className="bg-(--surface) p-6 rounded-xl shadow-2xl w-full max-w-md border border-(--outline-variant) mx-4 transform transition-all">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-(--primary-container) text-(--on-primary-container)">
+                                    <FolderPlus size={20} />
+                                </div>
+                                <h3 className="text-lg font-semibold text-(--on-surface)">
+                                    {t("panel.createFolder")}
+                                </h3>
+                            </div>
+                            <button 
+                                onClick={() => setIsFolderModalOpen(false)} 
+                                className="p-1.5 rounded-lg text-(--on-surface-variant) hover:text-(--on-surface) hover:bg-(--surface-container-high) transition-colors"
+                            >
+                                <X size={18} />
                             </button>
                         </div>
                         <input
@@ -51,21 +62,26 @@ export function SidebarModals({
                                     handleAddFolder();
                                 }
                             }}
-                            className="w-full p-2 border border-(--outline-variant) rounded mb-2 bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary)"
+                            className="w-full px-4 py-3 border border-(--outline-variant) rounded-lg bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary) focus:border-transparent transition-all"
                             placeholder={t("panel.folderName")}
                             autoFocus
                         />
-                        {error && <p className="text-(--error) text-sm mb-4">{error}</p>}
-                        <div className="flex justify-end gap-2 mt-4">
+                        {error && (
+                            <div className="flex items-center gap-2 mt-3 p-3 bg-(--error-container)/30 rounded-lg">
+                                <AlertTriangle size={16} className="text-(--error) flex-shrink-0" />
+                                <p className="text-(--error) text-sm">{error}</p>
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={() => setIsFolderModalOpen(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface-variant)"
+                                className="cursor-pointer px-5 py-2.5 border border-(--outline-variant) rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant) transition-colors font-medium"
                             >
                                 {t("panel.cancel")}
                             </button>
                             <button
                                 onClick={handleAddFolder}
-                                className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
+                                className="cursor-pointer px-5 py-2.5 bg-(--primary) text-(--on-primary) rounded-lg hover:opacity-90 transition-opacity font-medium shadow-sm"
                             >
                                 {t("panel.create")}
                             </button>
@@ -76,24 +92,32 @@ export function SidebarModals({
 
             {/* Delete Confirmation Modal */}
             {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                            {t("panel.deleteFolderConfirm")}
-                        </h3>
-                        <p className="mb-6 text-(--on-surface-variant)">
+                <div 
+                    className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) confirmDelete(false); }}
+                >
+                    <div className="bg-(--surface) p-6 rounded-xl shadow-2xl w-full max-w-md border border-(--outline-variant) mx-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 rounded-lg bg-(--error-container)/30 text-(--error)">
+                                <Trash2 size={20} />
+                            </div>
+                            <h3 className="text-lg font-semibold text-(--on-surface)">
+                                {t("panel.deleteFolderConfirm")}
+                            </h3>
+                        </div>
+                        <p className="mb-6 text-(--on-surface-variant) leading-relaxed">
                             {t("panel.deleteFolderWarning")}
                         </p>
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-3">
                             <button
                                 onClick={() => confirmDelete(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface-variant)"
+                                className="cursor-pointer px-5 py-2.5 border border-(--outline-variant) rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant) transition-colors font-medium"
                             >
                                 {t("panel.cancel")}
                             </button>
                             <button
                                 onClick={() => confirmDelete(true)}
-                                className="cursor-pointer px-4 py-2 bg-(--error) text-(--on-error) rounded hover:bg-(--error-container) hover:text-(--on-error-container)"
+                                className="cursor-pointer px-5 py-2.5 bg-(--error) text-(--on-error) rounded-lg hover:opacity-90 transition-opacity font-medium shadow-sm"
                             >
                                 {t("panel.delete")}
                             </button>
@@ -104,14 +128,25 @@ export function SidebarModals({
 
             {/* Note Creation Modal */}
             {isNoteModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-(--on-surface)">
-                                {t("panel.createNote")}
-                            </h3>
-                            <button onClick={() => setIsNoteModalOpen(false)} className="text-(--on-surface-variant) hover:text-(--on-surface)">
-                                <X size={20} />
+                <div 
+                    className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsNoteModalOpen(false); }}
+                >
+                    <div className="bg-(--surface) p-6 rounded-xl shadow-2xl w-full max-w-md border border-(--outline-variant) mx-4">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-(--primary-container) text-(--on-primary-container)">
+                                    <FilePlus size={20} />
+                                </div>
+                                <h3 className="text-lg font-semibold text-(--on-surface)">
+                                    {t("panel.createNote")}
+                                </h3>
+                            </div>
+                            <button 
+                                onClick={() => setIsNoteModalOpen(false)} 
+                                className="p-1.5 rounded-lg text-(--on-surface-variant) hover:text-(--on-surface) hover:bg-(--surface-container-high) transition-colors"
+                            >
+                                <X size={18} />
                             </button>
                         </div>
                         <input
@@ -124,21 +159,26 @@ export function SidebarModals({
                                     handleCreateNote();
                                 }
                             }}
-                            className="w-full p-2 border border-(--outline-variant) rounded mb-2 bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary)"
+                            className="w-full px-4 py-3 border border-(--outline-variant) rounded-lg bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary) focus:border-transparent transition-all"
                             placeholder={t("panel.noteTitle")}
                             autoFocus
                         />
-                        {error && <p className="text-(--error) text-sm mb-4">{error}</p>}
-                        <div className="flex justify-end gap-2 mt-4">
+                        {error && (
+                            <div className="flex items-center gap-2 mt-3 p-3 bg-(--error-container)/30 rounded-lg">
+                                <AlertTriangle size={16} className="text-(--error) flex-shrink-0" />
+                                <p className="text-(--error) text-sm">{error}</p>
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={() => setIsNoteModalOpen(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface-variant)"
+                                className="cursor-pointer px-5 py-2.5 border border-(--outline-variant) rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant) transition-colors font-medium"
                             >
                                 {t("panel.cancel")}
                             </button>
                             <button
                                 onClick={handleCreateNote}
-                                className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
+                                className="cursor-pointer px-5 py-2.5 bg-(--primary) text-(--on-primary) rounded-lg hover:opacity-90 transition-opacity font-medium shadow-sm"
                             >
                                 {t("panel.create")}
                             </button>
@@ -149,14 +189,25 @@ export function SidebarModals({
 
             {/* Rename Note Modal */}
             {isRenameNoteModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="modal-content bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-(--on-surface)">
-                                {t("panel.renameNote")}
-                            </h3>
-                            <button onClick={() => { setIsRenameNoteModalOpen(false); setError(""); }} className="text-(--on-surface-variant) hover:text-(--on-surface)">
-                                <X size={20} />
+                <div 
+                    className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) { setIsRenameNoteModalOpen(false); setError(""); } }}
+                >
+                    <div className="bg-(--surface) p-6 rounded-xl shadow-2xl w-full max-w-md border border-(--outline-variant) mx-4">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-(--primary-container) text-(--on-primary-container)">
+                                    <Edit size={20} />
+                                </div>
+                                <h3 className="text-lg font-semibold text-(--on-surface)">
+                                    {t("panel.renameNote")}
+                                </h3>
+                            </div>
+                            <button 
+                                onClick={() => { setIsRenameNoteModalOpen(false); setError(""); }} 
+                                className="p-1.5 rounded-lg text-(--on-surface-variant) hover:text-(--on-surface) hover:bg-(--surface-container-high) transition-colors"
+                            >
+                                <X size={18} />
                             </button>
                         </div>
 
@@ -173,30 +224,31 @@ export function SidebarModals({
                                     handleRenameNote();
                                 }
                             }}
-                            className="w-full p-2 border border-(--outline-variant) rounded mb-2 bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary)"
+                            className="w-full px-4 py-3 border border-(--outline-variant) rounded-lg bg-(--surface-container) text-(--on-surface) focus:outline-none focus:ring-2 focus:ring-(--primary) focus:border-transparent transition-all"
                             placeholder={t("panel.noteTitle")}
                             autoFocus
                         />
 
                         {error && (
-                            <p className="text-(--error) text-sm mb-4">
-                                {error}
-                            </p>
+                            <div className="flex items-center gap-2 mt-3 p-3 bg-(--error-container)/30 rounded-lg">
+                                <AlertTriangle size={16} className="text-(--error) flex-shrink-0" />
+                                <p className="text-(--error) text-sm">{error}</p>
+                            </div>
                         )}
 
-                        <div className="flex justify-end gap-2 mt-4">
+                        <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={() => {
                                     setIsRenameNoteModalOpen(false);
                                     setError("");
                                 }}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface-variant)"
+                                className="cursor-pointer px-5 py-2.5 border border-(--outline-variant) rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant) transition-colors font-medium"
                             >
                                 {t("panel.cancel")}
                             </button>
                             <button
                                 onClick={handleRenameNote}
-                                className="cursor-pointer px-4 py-2 bg-(--primary) text-(--on-primary) rounded hover:bg-(--primary-container) hover:text-(--on-primary-container)"
+                                className="cursor-pointer px-5 py-2.5 bg-(--primary) text-(--on-primary) rounded-lg hover:opacity-90 transition-opacity font-medium shadow-sm"
                             >
                                 {t("panel.rename")}
                             </button>
@@ -207,24 +259,32 @@ export function SidebarModals({
 
             {/* Delete Note Confirmation Modal */}
             {isDeleteNoteConfirmOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-(--surface) p-6 rounded-lg shadow-lg w-96 border border-(--outline-variant)">
-                        <h3 className="text-xl font-semibold mb-4 text-(--on-surface)">
-                            {t("panel.deleteNoteConfirm")}
-                        </h3>
-                        <p className="mb-6 text-(--on-surface-variant)">
+                <div 
+                    className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsDeleteNoteConfirmOpen(false); }}
+                >
+                    <div className="bg-(--surface) p-6 rounded-xl shadow-2xl w-full max-w-md border border-(--outline-variant) mx-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 rounded-lg bg-(--error-container)/30 text-(--error)">
+                                <Trash2 size={20} />
+                            </div>
+                            <h3 className="text-lg font-semibold text-(--on-surface)">
+                                {t("panel.deleteNoteConfirm")}
+                            </h3>
+                        </div>
+                        <p className="mb-6 text-(--on-surface-variant) leading-relaxed">
                             {t("panel.deleteNoteWarning")}
                         </p>
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-3">
                             <button
                                 onClick={() => setIsDeleteNoteConfirmOpen(false)}
-                                className="cursor-pointer px-4 py-2 border border-(--outline-variant) rounded hover:bg-(--surface-container-high) text-(--on-surface-variant)"
+                                className="cursor-pointer px-5 py-2.5 border border-(--outline-variant) rounded-lg hover:bg-(--surface-container-high) text-(--on-surface-variant) transition-colors font-medium"
                             >
                                 {t("panel.cancel")}
                             </button>
                             <button
                                 onClick={handleDeleteNote}
-                                className="cursor-pointer px-4 py-2 bg-(--error) text-(--on-error) rounded hover:bg-(--error-container) hover:text-(--on-error-container)"
+                                className="cursor-pointer px-5 py-2.5 bg-(--error) text-(--on-error) rounded-lg hover:opacity-90 transition-opacity font-medium shadow-sm"
                             >
                                 {t("panel.delete")}
                             </button>

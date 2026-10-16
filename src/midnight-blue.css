@@ -1,0 +1,120 @@
+:root.midnight-blue {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(25 25 35);
+    --editor-text: rgb(220 220 225);
+    --editor-caret: rgb(100 180 255);
+    --editor-selection-bg: rgb(40 60 100);
+    --editor-selection-text: rgb(220 235 255);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(17 24 39);
+    --preview-text: rgb(200 205 215);
+    --preview-heading: rgb(225 230 240);
+    --preview-link: rgb(100 180 255);
+    --preview-code-bg: rgb(30 40 60);
+    --preview-code-text: rgb(200 220 255);
+    --preview-blockquote-border: rgb(100 180 255);
+    --preview-blockquote-text: rgb(180 190 205);
+    --preview-strong: rgb(100 180 255);
+    --preview-em: rgb(130 200 255);
+    --preview-list-marker: rgb(100 180 255);
+    --preview-table-border: rgb(50 60 80);
+    --preview-table-header-bg: rgb(30 40 60);
+    --preview-table-header-text: rgb(225 230 240);
+    --preview-hr: rgb(50 60 80);
+
+    --primary: rgb(100 180 255);
+    --surface-tint: rgb(100 180 255);
+    --on-primary: rgb(0 32 64);
+    --primary-container: rgb(25 50 90);
+    --on-primary-container: rgb(180 215 255);
+    --secondary: rgb(130 200 255);
+    --on-secondary: rgb(0 32 64);
+    --secondary-container: rgb(30 55 95);
+    --on-secondary-container: rgb(180 220 255);
+    --tertiary: rgb(180 160 255);
+    --on-tertiary: rgb(35 20 70);
+    --tertiary-container: rgb(55 40 100);
+    --on-tertiary-container: rgb(220 210 255);
+    --error: rgb(255 130 130);
+    --on-error: rgb(80 0 0);
+    --error-container: rgb(100 20 20);
+    --on-error-container: rgb(255 200 200);
+    --background: rgb(10 15 25);
+    --on-background: rgb(225 230 240);
+    --surface: rgb(10 15 25);
+    --on-surface: rgb(225 230 240);
+    --surface-variant: rgb(40 50 70);
+    --on-surface-variant: rgb(160 175 200);
+    --outline: rgb(80 100 140);
+    --outline-variant: rgb(40 50 70);
+    --shadow: rgb(0 0 0);
+    --scrim: rgb(0 0 0);
+    --inverse-surface: rgb(225 230 240);
+    --inverse-on-surface: rgb(25 35 55);
+    --inverse-primary: rgb(40 80 150);
+    --primary-fixed: rgb(180 215 255);
+    --on-primary-fixed: rgb(0 20 50);
+    --primary-fixed-dim: rgb(100 180 255);
+    --on-primary-fixed-variant: rgb(25 50 90);
+    --secondary-fixed: rgb(180 220 255);
+    --on-secondary-fixed: rgb(0 20 50);
+    --secondary-fixed-dim: rgb(130 200 255);
+    --on-secondary-fixed-variant: rgb(30 55 95);
+    --tertiary-fixed: rgb(220 210 255);
+    --on-tertiary-fixed: rgb(25 10 60);
+    --tertiary-fixed-dim: rgb(180 160 255);
+    --on-tertiary-fixed-variant: rgb(55 40 100);
+    --surface-dim: rgb(10 15 25);
+    --surface-bright: rgb(45 55 75);
+    --surface-container-lowest: rgb(8 12 20);
+    --surface-container-low: rgb(17 24 39);
+    --surface-container: rgb(22 30 48);
+    --surface-container-high: rgb(30 40 60);
+    --surface-container-highest: rgb(40 50 70);
+}
+
+/* Midnight Blue theme editor overrides */
+html.midnight-blue .editor-area > div:last-child,
+html.midnight-blue .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.midnight-blue .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.midnight-blue .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
+}
+
+html, body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--surface-container-high);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--outline-variant);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--outline);
+}

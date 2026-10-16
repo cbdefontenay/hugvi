@@ -1,0 +1,120 @@
+:root.forest-dark {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(25 32 25);
+    --editor-text: rgb(215 225 210);
+    --editor-caret: rgb(130 220 130);
+    --editor-selection-bg: rgb(40 70 40);
+    --editor-selection-text: rgb(210 240 205);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(20 26 20);
+    --preview-text: rgb(200 210 195);
+    --preview-heading: rgb(225 235 220);
+    --preview-link: rgb(130 220 130);
+    --preview-code-bg: rgb(35 45 35);
+    --preview-code-text: rgb(200 230 195);
+    --preview-blockquote-border: rgb(130 220 130);
+    --preview-blockquote-text: rgb(185 195 180);
+    --preview-strong: rgb(130 220 130);
+    --preview-em: rgb(160 230 160);
+    --preview-list-marker: rgb(130 220 130);
+    --preview-table-border: rgb(50 65 50);
+    --preview-table-header-bg: rgb(35 45 35);
+    --preview-table-header-text: rgb(225 235 220);
+    --preview-hr: rgb(50 65 50);
+
+    --primary: rgb(130 220 130);
+    --surface-tint: rgb(130 220 130);
+    --on-primary: rgb(20 50 20);
+    --primary-container: rgb(35 65 35);
+    --on-primary-container: rgb(190 235 185);
+    --secondary: rgb(160 230 160);
+    --on-secondary: rgb(20 50 20);
+    --secondary-container: rgb(40 70 40);
+    --on-secondary-container: rgb(200 240 195);
+    --tertiary: rgb(255 200 130);
+    --on-tertiary: rgb(70 40 10);
+    --tertiary-container: rgb(90 55 20);
+    --on-tertiary-container: rgb(255 225 180);
+    --error: rgb(255 140 140);
+    --on-error: rgb(80 0 0);
+    --error-container: rgb(100 20 20);
+    --on-error-container: rgb(255 200 200);
+    --background: rgb(15 20 15);
+    --on-background: rgb(225 235 220);
+    --surface: rgb(15 20 15);
+    --on-surface: rgb(225 235 220);
+    --surface-variant: rgb(45 55 45);
+    --on-surface-variant: rgb(175 190 170);
+    --outline: rgb(85 105 80);
+    --outline-variant: rgb(45 55 45);
+    --shadow: rgb(0 0 0);
+    --scrim: rgb(0 0 0);
+    --inverse-surface: rgb(225 235 220);
+    --inverse-on-surface: rgb(30 40 30);
+    --inverse-primary: rgb(70 130 70);
+    --primary-fixed: rgb(190 235 185);
+    --on-primary-fixed: rgb(15 40 15);
+    --primary-fixed-dim: rgb(130 220 130);
+    --on-primary-fixed-variant: rgb(35 65 35);
+    --secondary-fixed: rgb(200 240 195);
+    --on-secondary-fixed: rgb(15 40 15);
+    --secondary-fixed-dim: rgb(160 230 160);
+    --on-secondary-fixed-variant: rgb(40 70 40);
+    --tertiary-fixed: rgb(255 225 180);
+    --on-tertiary-fixed: rgb(55 30 5);
+    --tertiary-fixed-dim: rgb(255 200 130);
+    --on-tertiary-fixed-variant: rgb(90 55 20);
+    --surface-dim: rgb(15 20 15);
+    --surface-bright: rgb(45 55 45);
+    --surface-container-lowest: rgb(10 15 10);
+    --surface-container-low: rgb(20 26 20);
+    --surface-container: rgb(25 32 25);
+    --surface-container-high: rgb(33 42 33);
+    --surface-container-highest: rgb(45 55 45);
+}
+
+/* Forest Dark theme editor overrides */
+html.forest-dark .editor-area > div:last-child,
+html.forest-dark .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.forest-dark .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.forest-dark .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
+}
+
+html, body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--surface-container-high);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--outline-variant);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--outline);
+}

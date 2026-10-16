@@ -6,14 +6,27 @@
       "language": "Langues",
       "keyboard": "Raccourcis clavier",
       "data": "Gestion des données",
-      "about": "À propos"
+      "about": "À propos",
+      "updates": "Mises à jour"
     },
     "appearance": {
       "title": "Apparence",
       "darkMode": "Mode sombre",
       "description": "Basculer entre le thème clair et sombre",
       "appTheme": "Thème de l'application",
-      "themeDescription": "Choisissez votre thème d'application préféré"
+      "themeDescription": "Choisissez votre thème d'application préféré",
+      "themes": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "sepia": "Sépia",
+        "ocean": "Océan",
+        "hacker-dark": "Hacker Sombre",
+        "hacker-light": "Hacker Clair",
+        "midnight-blue": "Bleu Minuit",
+        "rose-gold-dark": "Or Rose Sombre",
+        "forest-dark": "Forêt Sombre",
+        "peach-light": "Pêche Clair"
+      }
     },
     "language": {
       "title": "Changer la langue"
@@ -38,6 +51,25 @@
       "resetConfirm": "Êtes-vous SÛR de vouloir TOUT supprimer ? Cette action est irréversible.",
       "resetSuccess": "Toutes les données ont été effacées.",
       "resetError": "Échec de l'effacement des données."
+    },
+    "updates": {
+      "title": "Mises à jour",
+      "description": "Vérifiez si une nouvelle version de Hugvi est disponible",
+      "checkTitle": "Vérifier les mises à jour",
+      "checkDesc": "Comparez votre version avec la dernière version sur GitHub",
+      "checkButton": "Vérifier les mises à jour",
+      "checking": "Vérification en cours...",
+      "checkError": "Échec de la vérification des mises à jour. Vérifiez votre connexion internet.",
+      "available": "Une mise à jour est disponible !",
+      "currentVersion": "Version actuelle",
+      "latestVersion": "Dernière version",
+      "downloadButton": "Télécharger la mise à jour",
+      "downloading": "Téléchargement...",
+      "downloadComplete": "Téléchargement terminé !",
+      "downloadError": "Échec du téléchargement. Vérifiez votre connexion internet.",
+      "installInstructions": "Exécutez le fichier .AppImage téléchargé pour installer la mise à jour.",
+      "openReleases": "Page des releases",
+      "upToDate": "Hugvi est à jour !"
     },
     "about": {
       "title": "À propos",

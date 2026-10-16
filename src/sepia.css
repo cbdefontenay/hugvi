@@ -1,4 +1,28 @@
 :root.sepia {
+    /* Editor neutral colors — distinct from the app theme */
+    --editor-bg: rgb(252 248 244);
+    --editor-text: rgb(32 26 23);
+    --editor-caret: rgb(140 86 55);
+    --editor-selection-bg: rgb(255 219 203);
+    --editor-selection-text: rgb(59 23 2);
+
+    /* Preview neutral colors — body text is neutral, headings/links/code are themed */
+    --preview-bg: rgb(252 248 244);
+    --preview-text: rgb(50 40 35);
+    --preview-heading: rgb(32 26 23);
+    --preview-link: rgb(140 86 55);
+    --preview-code-bg: rgb(246 235 230);
+    --preview-code-text: rgb(59 23 2);
+    --preview-blockquote-border: rgb(140 86 55);
+    --preview-blockquote-text: rgb(64 51 44);
+    --preview-strong: rgb(140 86 55);
+    --preview-em: rgb(118 90 75);
+    --preview-list-marker: rgb(140 86 55);
+    --preview-table-border: rgb(215 194 185);
+    --preview-table-header-bg: rgb(240 230 225);
+    --preview-table-header-text: rgb(59 23 2);
+    --preview-hr: rgb(215 194 185);
+
     --primary: rgb(140 86 55);
     --surface-tint: rgb(140 86 55);
     --on-primary: rgb(255 255 255);
@@ -48,4 +72,21 @@
     --surface-container: rgb(246 235 230);
     --surface-container-high: rgb(240 230 225);
     --surface-container-highest: rgb(235 224 219);
+}
+
+/* Sepia theme editor overrides */
+html.sepia .editor-area > div:last-child,
+html.sepia .editor-area > .editor-area {
+    background-color: var(--editor-bg) !important;
+}
+
+html.sepia .editor-area textarea {
+    background-color: transparent !important;
+    color: var(--editor-text) !important;
+    caret-color: var(--editor-caret) !important;
+}
+
+html.sepia .editor-area ::selection {
+    background-color: var(--editor-selection-bg) !important;
+    color: var(--editor-selection-text) !important;
 }
